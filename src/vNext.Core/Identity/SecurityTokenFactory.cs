@@ -25,10 +25,9 @@ namespace vNext.Core.Identity
                     new Claim(JwtRegisteredClaimNames.Sub, uniqueName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Iat, nowDateTimeOffset.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
+                    new Claim("UserId", $"{userId}")
                 };
 
-            claims.Add(new Claim("UserId", $"{userId}"));
-            
             var jwt = new JwtSecurityToken(
                 issuer: _configuration["Authentication:JwtIssuer"],
                 audience: _configuration["Authentication:JwtAudience"],
