@@ -1,0 +1,7 @@
+<cs-address-editor [address]="address$ | async"
+                   [addressId]="addressId"
+                   [countrySubdivisions]="addressStore.countrySubdivisions$ | async"
+                   [countries]="addressStore.countries$ | async"
+                   (save)="handleSave($event)"
+                   (cancel)="cancel.emit($event)">
+</cs-address-editor>

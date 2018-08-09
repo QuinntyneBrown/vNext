@@ -1,0 +1,12 @@
+<section class="mat-typography">
+  <h2>Dashboards</h2>
+</section>
+
+<section>
+  <cs-dashboard-list-item *ngFor="let dashboard of dashboards"
+                          [dashboard]="dashboard"
+                          (onDelete)="handleDelete(dashboard)"
+                          (onValueChanges)="handValueChange($event)">
+
+  </cs-dashboard-list-item>
+</section>

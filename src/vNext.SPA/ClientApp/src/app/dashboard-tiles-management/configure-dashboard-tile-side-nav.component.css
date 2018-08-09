@@ -1,0 +1,26 @@
+:host {
+  height:100vh;
+  background-color:#fff;
+}
+
+p {
+  margin:0;
+}
+
+mat-toolbar-row {
+  display:grid;
+  grid-template-columns:1fr min-content;
+}
+
+section {
+  padding:20px;
+}
+
+form {
+  display:flex;
+  flex-direction:column;
+}
+
+mat-form-field, mat-slider {
+  width: 100%;
+}

@@ -1,0 +1,12 @@
+<form novalidate [formGroup]="form" autocomplete="off" spellcheck="false" class="mat-form-field-content">
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="Code" id="code" formControlName="code" />
+  </mat-form-field>
+  <button mat-icon-button class="delete-icon-container" (click)="onDelete.emit(dashboard)">
+    <mat-icon>
+      delete
+    </mat-icon>
+  </button>
+</form> 
+
+

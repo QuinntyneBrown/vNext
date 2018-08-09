@@ -1,0 +1,16 @@
+<section class="mat-typography">
+  <h1>Tile Catalog</h1>
+</section>
+
+<a>Select a tile to add to the current dashboard</a>
+<section class="card-container">
+  <mat-card *ngFor="let tile of (tiles$ | async)"
+            (click)="handleCardClick(tile)"
+            [ngClass]="{'selected' : tileIsSelected(tile) }">
+    {{ tile.code }}
+  </mat-card>
+</section>
+<section class="actions">
+  <button class="add" mat-raised-button color="primary" (click)="tryToAddDashboardTiles()">Add</button>
+  <button class="cancel" mat-button (click)="cancel()">Cancel</button>
+</section>

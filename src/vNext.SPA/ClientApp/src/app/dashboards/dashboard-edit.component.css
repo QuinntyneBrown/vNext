@@ -1,0 +1,15 @@
+.full-width {
+  width:100%;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  grid-gap: 10px;
+}
+
+.add-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

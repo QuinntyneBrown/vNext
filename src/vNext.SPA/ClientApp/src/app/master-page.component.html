@@ -1,0 +1,27 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <h1>vNext</h1>
+</mat-toolbar>
+
+<mat-sidenav-container class="app-content-container" autosize>
+  <mat-sidenav #drawer class="sidenav" mode="side" (click)="drawer.close()">
+    <button mat-button [routerLink]="['/']">Home</button>
+    <button mat-button [routerLink]="['/contacts']">Contacts</button>
+    <button mat-button (click)="signOut()">Sign Out</button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+
+    <div class="router-outlet-container">
+      <router-outlet #router></router-outlet>
+    </div>
+
+    <app-error-console [errors$]="notificationService.errors$"
+                       (close)="closeErrorConsole()"
+                       (clear)="clearNotifcations()"
+                       *ngIf="isErrorConsoleOpen">
+    </app-error-console>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

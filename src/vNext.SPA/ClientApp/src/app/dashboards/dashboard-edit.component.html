@@ -1,0 +1,16 @@
+<section class="mat-typography">
+  <h2>Create Dashboard</h2>
+</section>
+
+<form novalidate [formGroup]="form" autocomplete="off" spellcheck="false">
+
+  <mat-form-field class="full-width">
+    <input matInput type="text" placeholder="Code" id="code" formControlName="code" />
+  </mat-form-field>
+
+  <button mat-icon-button class="add-icon-container" (click)="tryToCreate({ value: this.form.value })">
+    <mat-icon>
+      add
+    </mat-icon>
+  </button>
+</form>

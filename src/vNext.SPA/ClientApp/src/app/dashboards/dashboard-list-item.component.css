@@ -1,0 +1,11 @@
+.mat-form-field-content {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-gap:10px;
+}
+
+.delete-icon-container {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}

@@ -1,0 +1,19 @@
+<section class="mat-typography error-console-chrome">
+  <h2>Error List</h2>
+
+  <mat-icon class="close-button" (click)="close.emit()">close</mat-icon>
+
+</section>
+
+<section class="mat-typography error-sub-console-chrome">
+  <span class="error-count">
+    <span class="error-count-wrapper" (click)="clear.emit()">
+      <mat-icon>close</mat-icon>
+    </span>
+    <p>{{ (errors$ | async).length }}</p>
+  </span>
+</section>
+
+  <mat-list role="list">
+    <mat-list-item *ngFor="let error of (errors$ | async)" role="listitem">{{ error.message }}</mat-list-item>
+  </mat-list>

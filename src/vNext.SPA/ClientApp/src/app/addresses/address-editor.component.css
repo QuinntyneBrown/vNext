@@ -1,0 +1,37 @@
+:host {
+  background-color:#fff;
+  display:block;
+  padding:20px;
+  max-width:100%;
+}
+
+mat-form-field {
+  width:100%;
+}
+
+mat-tab-group {
+  min-height:600px;
+}
+
+.tab-container {
+  min-height:600px;
+}
+
+.tab-container form {
+  margin-top:20px;
+}
+
+.address-editor-form {
+  margin-bottom:20px;
+}
+
+ag-grid-angular {
+  height: 300px;
+  width:100%;
+  cursor: pointer;
+}
+
+.address-email-form,
+.address-phone-form {
+  margin-bottom:20px;
+}

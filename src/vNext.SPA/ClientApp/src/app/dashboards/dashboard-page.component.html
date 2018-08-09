@@ -1,0 +1,8 @@
+<cs-dashboard-grid [dashboard$]="_dashboardStore.currentDashboard$"
+                   (onDelete)="handleDelete($event)">
+
+</cs-dashboard-grid>
+
+<button mat-fab (click)="handleFabButtonClick()">
+  <mat-icon>add</mat-icon>
+</button>

@@ -1,0 +1,23 @@
+<span>Address</span>
+<section>
+  <p innerHTML="{{ address.addressStreet | newLineToHtml }}"></p>
+  <p>{{ address.city }}, {{ address.countrySubdivision.code }} {{ address.postalZipCode }}</p>
+  <p>{{ address.country.description }}</p>
+</section>
+<span>County</span><p>{{ address.county }}</p>
+<span>Phone</span><p>{{ address.phone }}</p>
+<span>Fax</span><p>{{ address.fax }}</p>
+<span>Email</span><p>{{ address.email }}</p>
+<span>Webiste</span><p>{{ address.website }}</p>
+<span>Emails</span>
+<section>
+  <p *ngFor="let email of address.addressEmails">
+    {{ email.email }} - {{ email.addressEmailType.description }}
+  </p>
+</section>
+<span>Phones</span>
+<section>
+  <p *ngFor="let phone of address.addressPhones">
+    {{ phone.phone }} - {{ phone.addressPhoneType.description }}
+  </p>
+</section>

@@ -1,0 +1,63 @@
+<form novalidate [formGroup]="form" autocomplete="off" spellcheck="false" type="reset">
+
+  <mat-form-field>
+    <input matInput type="text"
+           placeholder="First Name"
+           id="firstName"
+           formControlName="firstName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text"
+           placeholder="Middle Name"
+           id="middleName"
+           formControlName="middleName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           type="text"
+           placeholder="Last Name"
+           id="lastName"
+           formControlName="lastName" />
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput
+           type="text"
+           placeholder="Company Name"
+           id="companyName"
+           formControlName="companyName" />
+  </mat-form-field>
+
+  <mat-error *ngIf="form.errors?.contactInvalid && (form.touched || form.dirty)">
+    Contact identity invalid. Must have first name, last name or company name!
+  </mat-error>
+
+  <mat-error *ngIf="form.errors?.hasAddressInvalid && (form.touched || form.dirty)">
+    Address Required
+  </mat-error>
+
+  <section>
+    <button mat-raised-button color="primary" (click)="save.emit(form.value)" id="save" [disabled]="!form.valid">
+      Save
+    </button>
+
+    <a *ngIf="address && !disabled" (click)="handleEditAddressClick()">
+      Edit Address
+    </a>
+
+    <a *ngIf="!address && !disabled" (click)="handleEditAddressClick()">
+      Create Address
+    </a>
+
+  </section>
+
+  <section *ngIf="address.addressId">
+    <cs-address [address]="address">
+
+    </cs-address>
+  </section>
+
+
+</form>

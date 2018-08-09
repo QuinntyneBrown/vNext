@@ -1,0 +1,60 @@
+<form novalidate [formGroup]="form" autocomplete="off" spellcheck="false" class="address-editor-form">
+
+  <mat-form-field>
+    <textarea matInput type="text" placeholder="Address" id="address" formControlName="address" rows="3" required></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="City" id="city" formControlName="city" required/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Postal / Zip Code" id="postalZipCode" formControlName="postalZipCode" required/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="County" id="county" formControlName="county" required/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Country" formControlName="countryId" name="country" required>
+      <mat-option *ngFor="let country of countries" [value]="country.countryId">
+        {{country.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="form.value.countryId">
+    <mat-select placeholder="Province / State" formControlName="countrySubdivisionId" name="countrySubdivisionId" required>
+      <mat-option *ngFor="let countrySubdivision of countrySubdivisions | countryFilter: form.value.countryId" [value]="countrySubdivision.countrySubdivisionId">
+        {{countrySubdivision.description}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Phone" id="phone" formControlName="phone"/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Fax" id="fax" formControlName="fax"/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Email" id="email" formControlName="email"/>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="text" placeholder="Website" id="website" formControlName="website"/>
+  </mat-form-field>
+</form>
+
+<section>
+  <button mat-raised-button color="primary" (click)="tryToSave()" id="save" [disabled]="!form.valid">
+    Save
+  </button>
+  <button mat-button color="primary" (click)="cancel.emit()" id="cancel">
+    Cancel
+  </button>
+</section>
+

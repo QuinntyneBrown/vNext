@@ -1,0 +1,15 @@
+:host {
+  background-color: #fff;
+  display: block;
+  padding: 20px;
+  max-width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+a {
+  cursor: pointer;
+  margin-left: 20px;
+}

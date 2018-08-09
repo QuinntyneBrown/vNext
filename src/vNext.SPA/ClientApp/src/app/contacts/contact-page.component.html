@@ -1,0 +1,15 @@
+<cs-title-bar>
+  Contacts
+</cs-title-bar>
+
+<cs-contact-editor #contactEditor
+                   [contact]="contact$ | async"
+                   [address]="address$ | async"
+                   (editAddressClick)="handleEditAddressClick($event)"
+                   [disabled]="sideBarOpen"
+                   (save)="handleSave($event)">
+</cs-contact-editor>
+
+<section class="side-bar" #target>
+
+</section>

@@ -1,0 +1,16 @@
+<section>
+  <button [disabled]="configurationMode" mat-icon-button [matMenuTriggerFor]="dashboardTileMenu">
+    <mat-icon>
+      more_horiz
+    </mat-icon>
+  </button>
+</section>
+
+<section class="mat-typography">
+  <h2>{{ tileName }}</h2>
+</section>
+
+<mat-menu #dashboardTileMenu="matMenu">
+  <button mat-menu-item (click)="onConfigure.emit(dashboardTile)">Configure</button>
+  <button mat-menu-item (click)="onDelete.emit(dashboardTile)">Delete</button>
+</mat-menu>

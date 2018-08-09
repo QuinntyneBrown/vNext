@@ -1,0 +1,27 @@
+:host {
+  height: calc(100vh - 84px);
+  overflow-y:auto;
+}
+
+:host(.side-bar-open) {
+  display:grid;
+  grid-template-rows: max-content 1fr;
+  grid-template-columns:1fr 400px;
+}
+
+cs-primary-header {
+  grid-row: 1;
+  grid-column-start:1;
+  grid-column-end:2;
+}
+
+cs-contact-editor {
+  grid-row:2;
+  grid-column:1;
+}
+
+.side-bar {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column:2;
+}

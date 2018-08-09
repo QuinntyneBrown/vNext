@@ -1,0 +1,67 @@
+:host {
+  display:block;
+  height:300px;
+  background-color:#fff;
+  overflow:auto;
+}
+
+.close-button {
+  font-size:16px;
+  line-height:40px;
+  cursor:pointer;
+}
+
+.error-count-wrapper {
+  background-color: #ff4081;
+  border-radius:50%;
+  text-align:center;
+  cursor:pointer;
+}
+
+.error-count-wrapper mat-icon {
+  line-height:40px;
+  color:#fff;
+}
+
+h2 {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  line-height:40px;
+  font-size:20px;
+  text-align:center;
+  vertical-align:middle;
+  margin:0;
+  padding:0;
+}
+
+span {
+  line-height:20px;
+  vertical-align:middle;
+}
+
+.error-console-chrome {
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  padding: 10px 20px;
+  background-color: #EEE;
+  border-bottom:1px #999 solid;
+  height:40px;
+}
+
+.error-sub-console-chrome {
+  display: grid;
+  grid-auto-columns:40px;
+  padding: 10px 20px;
+  background-color: #EEE;
+  border-bottom: 1px #999 solid;
+  height: 40px;
+}
+
+.error-count {
+  display: grid;
+  grid-template-columns: 40px 40px;
+}
+

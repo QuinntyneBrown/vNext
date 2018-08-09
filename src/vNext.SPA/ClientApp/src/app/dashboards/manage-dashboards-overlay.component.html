@@ -1,0 +1,30 @@
+<section class="mat-typography">
+  <h1>Manage Dashboards</h1>
+</section>
+
+<section>
+
+
+  <cs-dashboard-edit (onCreate)="handleCreate($event)">
+
+  </cs-dashboard-edit>
+  <cs-dashboard-list [(dashboards)]="dashboards">
+
+  </cs-dashboard-list>
+  <!--<div class="example-container mat-elevation-z8">
+    <mat-table #table [dataSource]="_dashboardStore.dashboards$ | async">
+
+      <ng-container matColumnDef="code">
+        <mat-header-cell *matHeaderCellDef> Code </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.code}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['code'];"></mat-row>
+    </mat-table>
+  </div>-->
+</section>
+<section class="actions">
+  <button class="save" mat-raised-button color="primary" (click)="tryToSaveDashboards()">Save</button>
+  <button class="cancel" mat-button (click)="cancel()">Cancel</button>
+</section>

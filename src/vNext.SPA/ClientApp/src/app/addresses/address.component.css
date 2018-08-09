@@ -1,0 +1,14 @@
+:host {
+  display:grid;
+  grid-template-columns: max-content 1fr;
+  grid-gap:20px;
+}
+
+span {
+  font-weight:600;
+}
+
+p {
+  margin:0;
+  padding:0;
+}
