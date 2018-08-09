@@ -39,8 +39,6 @@ namespace IntegrationTests.Features
                         .DeleteAsync(Delete.Region(region.RegionId, region.ConcurrencyVersion));
                     }
                 }
-
-                
             }
         }
 
@@ -80,6 +78,38 @@ namespace IntegrationTests.Features
                     });
 
                 Assert.True(response.RegionId != default(int));
+            }
+        }
+
+        [Fact]
+        public async Task ShouldCreateRegionsInParrell()
+        {
+            using (var server = CreateServer())
+            {
+                var client = server.CreateClient();
+                var taskList = new List<Task>();
+
+                for(var i = 0; i < 1000; i++)
+                {
+                    taskList.Add(client.PostAsAsync<SaveRegionCommand.Request, SaveRegionCommand.Response>(Post.Regions, new SaveRegionCommand.Request()
+                    {
+                        Region = new RegionDto()
+                        {
+                            Code = $"ZQBLOG{i}",
+                            ConcurrencyVersion = 0,
+                            Description = "QB Region",
+                            Note = new vNext.API.Features.Notes.NoteDto()
+                            {
+                                Note = ""
+                            },
+                            Sort = 0
+                        }
+                    }));
+                }
+
+                Task.WaitAll(taskList.ToArray());
+
+                Assert.Equal(1, 1);
             }
         }
 

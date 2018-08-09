@@ -82,6 +82,12 @@ namespace vNext.API.Features.Regions
                 {
                     var dynamicParameters = new DynamicParameters();
 
+                    if (request.Region.RegionId == default(int))
+                    {
+                        request.Region.CreatedDateTime = request.CreatedDateTime;
+                        request.Region.CreatedByUserId = request.CreatedByUserId;
+                    }
+                    
                     dynamicParameters.AddDynamicParams(new
                     {
                         request.Region.RegionId,
@@ -92,13 +98,6 @@ namespace vNext.API.Features.Regions
                         request.Region.Sort,
                         noteId
                     });
-
-                    if(request.Region.RegionId == default(int))
-                        dynamicParameters.AddDynamicParams(new
-                        {
-                            request.CreatedByUserId,
-                            request.CreatedDateTime
-                        });
 
                     var parameterDirection = request.Region.RegionId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
 
