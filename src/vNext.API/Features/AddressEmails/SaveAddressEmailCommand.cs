@@ -11,7 +11,6 @@ namespace vNext.API.Features.AddressEmails
 {
     public class SaveAddressEmailCommand
     {
-
         public class Validator: AbstractValidator<Request> {
             public Validator()
             {
@@ -32,9 +31,7 @@ namespace vNext.API.Features.AddressEmails
         {
             private readonly ISqlConnectionManager _sqlConnectionManager;
             public Handler( ISqlConnectionManager sqlConnectionManager)
-            {
-                _sqlConnectionManager = sqlConnectionManager;
-            }
+                => _sqlConnectionManager = sqlConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
