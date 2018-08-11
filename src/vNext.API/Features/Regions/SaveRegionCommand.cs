@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using vNext.API.Features.Notes;
 using vNext.Core.Common;
 using vNext.Core.DomainEvents;
 using vNext.Core.Extensions;
@@ -73,7 +74,7 @@ namespace vNext.API.Features.Regions
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
-                var noteId = await new Notes.SaveNoteCommand.Prodcedure().ExecuteAsync(new Notes.SaveNoteCommand.Request() {
+                var noteId = await SaveNoteCommand.Prodcedure.ExecuteAsync(new SaveNoteCommand.Request() {
                     Note = request.Region.Note
                 }, connection);
 

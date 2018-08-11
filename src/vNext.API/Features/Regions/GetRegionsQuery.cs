@@ -1,7 +1,6 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +8,12 @@ using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
+
 namespace vNext.API.Features.Regions
 {
     public class GetRegionsQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -30,19 +30,13 @@ namespace vNext.API.Features.Regions
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    try
-                    {
-                        var result = (await Procedure.ExecuteAsync(request, connection));
+                    var result = (await Procedure.ExecuteAsync(request, connection));
 
-                        return new Response()
-                        {
-                            Regions = result
-                            .Select(x => RegionDto.FromRegion(x)) as IEnumerable<RegionDto>
-                        };
-                    }catch(Exception e)
+                    return new Response()
                     {
-                        throw e;
-                    }
+                        Regions = result
+                        .Select(x => RegionDto.FromRegion(x)) as IEnumerable<RegionDto>
+                    };
                 }
             }
         }

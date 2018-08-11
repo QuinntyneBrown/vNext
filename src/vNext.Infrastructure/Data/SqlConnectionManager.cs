@@ -36,19 +36,19 @@ namespace vNext.Infrastructure.Data
         {
             var storageAccount = CloudStorageAccount.Parse(_configuration["Storage:DefaultConnection:StorageConnectionString"]);
             var tableClient = storageAccount.CreateCloudTableClient();
-            var customers = tableClient.GetTableReference("Customers");
-            var query = new TableQuery<CustomerSetting>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "1"));
-            var resultSegment = customers.ExecuteQuerySegmentedAsync(query, null).GetAwaiter().GetResult();
-            var customer = resultSegment.Results.SingleOrDefault(x => x.CustomerKey == key);
+            var table = tableClient.GetTableReference("Customers");
+            var query = new TableQuery<TableEntity>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "1"));
+            var resultSegment = table.ExecuteQuerySegmentedAsync(query, null).GetAwaiter().GetResult();
+            var tableEntity = resultSegment.Results.SingleOrDefault(x => x.CustomerKey == key);
             var template = "Server={0};Initial Catalog={1};Integrated Security={2};Persist Security Info=False;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;Application Name=Comsense Enterprise - {3};";
-            var connectionString = string.Format(template, customer.DatabaseServerName, customer.DatabaseName, string.IsNullOrEmpty(customer.DatabaseUserName) ? "True" : "False", key ?? string.Empty);
-            if (!string.IsNullOrEmpty(customer.DatabaseUserName) && !string.IsNullOrEmpty(customer.DatabasePassword))
-                connectionString = $"{connectionString}User ID = {customer.DatabaseUserName};Password={customer.DatabasePassword};";
+            var connectionString = string.Format(template, tableEntity.DatabaseServerName, tableEntity.DatabaseName, string.IsNullOrEmpty(tableEntity.DatabaseUserName) ? "True" : "False", key ?? string.Empty);
+            if (!string.IsNullOrEmpty(tableEntity.DatabaseUserName) && !string.IsNullOrEmpty(tableEntity.DatabasePassword))
+                connectionString = $"{connectionString}User ID = {tableEntity.DatabaseUserName};Password={tableEntity.DatabasePassword};";
             return connectionString;
         }
     }
 
-    public class CustomerSetting : TableEntity
+    public class TableEntity : Microsoft.WindowsAzure.Storage.Table.TableEntity
     {
         public string CustomerKey { get; set; }
         public string DatabaseName { get; set; }

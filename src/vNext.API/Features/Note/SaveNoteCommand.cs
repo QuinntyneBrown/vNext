@@ -21,6 +21,8 @@ namespace vNext.API.Features.Notes
         }
 
         public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+            public Request() { }
+            public Request(string note) => Note = new NoteDto() { Note = note };
             public NoteDto Note { get; set; }
         }
 
@@ -41,15 +43,15 @@ namespace vNext.API.Features.Notes
                 {                    
                     return new Response()
                     {
-                        NoteId = await new Prodcedure().ExecuteAsync(request, connection)
+                        NoteId = await Prodcedure.ExecuteAsync(request, connection)
                     };
                 }
             }
         }
 
-        public class Prodcedure
+        public static class Prodcedure
         {
-            public async Task<int> ExecuteAsync(Request request, IDbConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 
