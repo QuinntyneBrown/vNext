@@ -11,7 +11,7 @@ namespace vNext.API.Features.ShipTos
 {
     public class GetShipTosQuery
     {
-        public class Request : IRequest<Response> { }
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -20,13 +20,13 @@ namespace vNext.API.Features.ShipTos
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     var result = await Procedure.ExecuteAsync(request, connection);
 
@@ -40,7 +40,7 @@ namespace vNext.API.Features.ShipTos
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 return await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcShipToGetAll]");
             }

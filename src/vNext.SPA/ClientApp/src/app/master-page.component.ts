@@ -41,13 +41,13 @@ export class MasterPageComponent {
   public signOut() {
     this._authService.logout();
   }
+  
+  public clearNotifcations() {
+    this.notificationService.errors$.next([]);
+  }
 
   public closeErrorConsole() {
     this.isErrorConsoleOpen = false;
-  }
-
-  public clearNotifcations() {
-    this.notificationService.errors$.next([]);
   }
 
   @HostBinding("class.error-console-is-opened")

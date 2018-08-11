@@ -43,6 +43,7 @@ export class ContactsPageComponent {
       header: "Company"
     }
   ];
+
   ngOnDestroy() {
     this.onDestroy.next();	
   }

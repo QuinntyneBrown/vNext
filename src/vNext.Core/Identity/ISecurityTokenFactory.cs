@@ -2,6 +2,6 @@ namespace vNext.Core.Identity
 {
     public interface ISecurityTokenFactory
     {
-        string Create(string username, int userId);
+        string Create(string username, int userId, string customerKey);
     }
 }

@@ -1,0 +1,12 @@
+<cs-title-bar>
+  Users
+</cs-title-bar>
+
+<button mat-button>
+  Create User
+</button>
+
+<cs-grid [data]="users$ | async"
+         [columns]="columns">
+
+</cs-grid>

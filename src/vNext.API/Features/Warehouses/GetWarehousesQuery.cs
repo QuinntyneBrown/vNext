@@ -1,5 +1,8 @@
 using MediatR;
+using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;
@@ -9,7 +12,9 @@ namespace vNext.API.Features.Warehouses
 {
     public class GetWarehousesQuery
     {
-        public class Request : IRequest<Response> { }
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        {
+        }
 
         public class Response
         {
@@ -18,22 +23,47 @@ namespace vNext.API.Features.Warehouses
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
+                    var result = await Procedure.ExecuteAsync(request, connection);
                     return new Response()
                     {
-                        Warehouses = await connection.QueryProcAsync<WarehouseDto>("[Product].[ProcWarehouseGetAll]")
+                        Warehouses = result.Select(x => WarehouseDto.FromWarehouse(x))
                     };
                 }
             }
+        }
+
+        public static class Procedure
+        {
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            {
+                return await connection.QueryProcAsync<QueryProjectionDto>("[Product].[ProcWarehouseGetAll]");
+            }
+        }
+
+        public class QueryProjectionDto
+        {
+            public int WarehouseId { get; set; }
+            public string Code { get; set; }
+            public string Description { get; set; }
+            public int Status { get; set; }
+            public DateTime CreatedDateTime { get; set; }
+            public DateTime CreatedDate { get; set; }
+            public int CreatedByUserId { get; set; }
+            public float HandlingCharge { get; set; }
+            public int AddressId { get; set; }
+            public int NoteId { get; set; }
+            public string Note { get; set; }
+            public string Settings { get; set; } = "{}";
         }
     }
 }

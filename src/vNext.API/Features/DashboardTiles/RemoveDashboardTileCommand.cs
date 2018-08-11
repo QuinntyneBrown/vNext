@@ -11,7 +11,7 @@ namespace vNext.API.Features.DashboardTiles
 {
     public class RemoveDashboardTileCommand
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public int DashboardTileId { get; set; }
             public int ConcurrencyVersion { get; set; }
@@ -24,13 +24,13 @@ namespace vNext.API.Features.DashboardTiles
 
         public class Handler : IRequestHandler<Request,Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     var favioriteResult = await DashboardTileFavoriteDeleteByDashboardTileIdCommand.Procedure.ExecuteAsync(new DashboardTileFavoriteDeleteByDashboardTileIdCommand.Request()
                     {

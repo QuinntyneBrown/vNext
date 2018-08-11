@@ -6,10 +6,11 @@ using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
-namespace VNext.API.Features.Documents
+namespace vNext.API.Features.Documents
 {
     public class SaveDocumentCommand
     {
@@ -22,7 +23,7 @@ namespace VNext.API.Features.Documents
             }
         }
 
-        public class Request : IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public DocumentDto Document { get; set; }
         }
 
@@ -35,9 +36,9 @@ namespace VNext.API.Features.Documents
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler( ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler( IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -45,7 +46,7 @@ namespace VNext.API.Features.Documents
                 {
                     var result = default(short);
 
-                    using (var connection = _sqlConnectionManager.GetConnection())
+                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                     {
                         connection.Open();
 
@@ -61,7 +62,7 @@ namespace VNext.API.Features.Documents
 
         public class Procedure
         {
-            public async Task<short> ExecuteAsync(Request request, SqlConnection connection)
+            public async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

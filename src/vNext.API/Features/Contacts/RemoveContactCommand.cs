@@ -10,7 +10,7 @@ namespace vNext.API.Features.Contacts
 {
     public class RemoveContactCommand
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public int ContactId { get; set; }
             public int ConcurrencyVersion { get; set; }
@@ -23,13 +23,13 @@ namespace vNext.API.Features.Contacts
 
         public class Handler : IRequestHandler<Request,Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     try
                     {
@@ -50,7 +50,7 @@ namespace vNext.API.Features.Contacts
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 return Convert.ToInt16(await connection.ExecuteProcAsync("[Common].[ProcContactDelete]", new { request.ContactId }));
             }

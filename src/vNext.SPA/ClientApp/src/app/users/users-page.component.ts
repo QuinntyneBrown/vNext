@@ -11,9 +11,18 @@ import { User } from "./user.model";
 export class UsersPageComponent { 
   constructor(
     private _userService: UserService
-  ) {
+  ) { }
 
-  }
+  public columns: { field: string, header: string }[] = [
+    {
+      field: "userId",
+      header: "Id"
+    },
+    {
+      field: "code",
+      header: "Code"
+    }
+  ];
 
   public ngOnInit() {
     this.users$ = this._userService.get();

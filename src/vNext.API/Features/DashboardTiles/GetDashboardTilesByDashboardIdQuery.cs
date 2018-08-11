@@ -12,7 +12,7 @@ namespace vNext.API.Features.DashboardTiles
 {
     public class GetDashboardTilesByDashboardIdQuery
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public int DashboardId { get; set; }
         }
@@ -24,16 +24,16 @@ namespace vNext.API.Features.DashboardTiles
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
 
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     var dashboardTiles = await Procedure.ExecuteAsync(request, connection);
 
@@ -56,7 +56,7 @@ namespace vNext.API.Features.DashboardTiles
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
                 => await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcDashboardTileGetByDashboardId]", new { request.DashboardId });
         }
     }

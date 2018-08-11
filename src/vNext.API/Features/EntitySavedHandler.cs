@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core;
@@ -12,13 +11,9 @@ namespace vNext.API.Features
     {
         private readonly IHubContext<IntegrationEventsHub> _hubContext;
         public EntitySavedHandler(IHubContext<IntegrationEventsHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
+            => _hubContext = hubContext;
 
         public async Task Handle(EntitySaved notification, CancellationToken cancellationToken)
-        {
-            await _hubContext.Clients.All.SendAsync("messages",notification);
-        }
+            => await _hubContext.Clients.All.SendAsync("messages", notification);
     }
 }

@@ -7,6 +7,8 @@ import { LoginComponent } from './users/login.component';
 import { DashboardPageComponent } from './dashboards/dashboard-page.component';
 import { LoginPageComponent } from './login-page.component';
 import { ContactsPageComponent } from './contacts/contacts-page.component';
+import { UsersPageComponent } from './users/users-page.component';
+import { WarehousesPageComponent } from './warehouses/warehouses-page.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +33,14 @@ export const routes: Routes = [
       {
         path: 'contacts',
         component: ContactsPageComponent,
+      },
+      {
+        path: 'users',
+        component: UsersPageComponent,
+      },
+      {
+        path: 'warehouses',
+        component: WarehousesPageComponent
       }
     ]
   }

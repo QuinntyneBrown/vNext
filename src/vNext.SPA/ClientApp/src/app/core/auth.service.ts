@@ -21,7 +21,7 @@ export class AuthService {
     this._redirectService.redirectToLogin();
   }
 
-  public tryToLogin(options: { code: string; password: string }) {
+  public tryToLogin(options: { code: string; password: string, customerKey: string }) {
     this._loggerService.trace('AuthService', 'tryToLogin');
 
     return this._httpClient.post<any>(`${this._baseUrl}api/users/signin`, options).pipe(

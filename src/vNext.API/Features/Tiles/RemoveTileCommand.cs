@@ -1,6 +1,7 @@
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -8,22 +9,22 @@ namespace vNext.API.Features.Tiles
 {
     public class RemoveTileCommand
     {
-        public class Request : IRequest
+        public class Request : AuthenticatedRequest, IRequest
         {
             public int TileId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     await connection.ExecuteProcAsync("[Comsense].[ProcTileDelete]", new { request.TileId });
                 }                

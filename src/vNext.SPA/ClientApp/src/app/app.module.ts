@@ -18,6 +18,9 @@ import { DashboardTilesManagementModule } from './dashboard-tiles-management/das
 import { LoginPageComponent } from './login-page.component';
 import { AddressesModule } from './addresses/addresses.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { WarehousesModule } from './warehouses/warehouses.module';
+import { RegionsModule } from './regions/regions.module';
+import { TerritoriesModule } from './territories/territories.module';
 
 
 @NgModule({
@@ -35,13 +38,16 @@ import { ContactsModule } from './contacts/contacts.module';
     CoreModule,
     SharedModule,
     UsersModule,
+    WarehousesModule,
 
     AddressesModule,
     ContactsModule,
     TilesModule,
     DashboardsModule,
     DashboardTilesModule,
-    DashboardTilesManagementModule
+    DashboardTilesManagementModule,
+    RegionsModule,
+    TerritoriesModule
   ],
   providers: [
     { provide: baseUrl, useValue: 'http://localhost:8853/' }

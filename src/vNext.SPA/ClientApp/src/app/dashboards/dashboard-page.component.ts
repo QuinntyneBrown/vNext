@@ -11,7 +11,7 @@ import { tap } from "rxjs/operators";
 import { deepCopy } from "../core/deep-copy";
 import { Router, RouterState, ActivatedRoute } from "@angular/router";
 import { LocalStorageService } from "../core/local-storage.service";
-import { dashboardsKey } from "../core/constants";
+import { dashboardsKey, userIdKey } from "../core/constants";
 import { Dashboard } from "./dashboard.model";
 import { AddDashboardTileOverlay } from "../dashboard-tiles-management/add-dashboard-tile-overlay";
 
@@ -32,20 +32,27 @@ export class DashboardPageComponent {
     private _localStorage: LocalStorageService
   ) { }
 
-  public ngOnInit() {    
-    if (!this.dashboardId) {
-      this._dashboardStore.currentDashboard$.next(this.dashboards[0]);
-    } else {
-      this._dashboardStore.currentDashboard$.next(this.dashboards.find(x => x.dashboardId == +this.dashboardId));
-    }
-  }
+  ngOnInit() {
+    
+    this._dashboardService.getAllByUserId({
+      userId: +this._localStorage.get({ name: userIdKey })
+    }).subscribe(x => {
+      this._dashboardStore.dashboards$.next(x);
+      
+      if (this.dashboardId === undefined) {
+        this._dashboardStore.currentDashboard$.next(this.dashboards[0]);
+      } else {
+        this._dashboardStore.currentDashboard$.next(this.dashboards.find(x => x.dashboardId == +this.dashboardId));
+      }
+    });
 
+  }
   public get dashboards(): Dashboard[] {
     return this._localStorage.get({ name: dashboardsKey });
   }
 
   public get dashboardId():number {
-    return +this._activateRoute.snapshot.params["id"];
+    return this._activateRoute.snapshot.params["id"];
   }
   public onDestroy: Subject<void> = new Subject<void>();
 

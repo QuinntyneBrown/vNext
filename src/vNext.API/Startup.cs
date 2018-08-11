@@ -23,6 +23,8 @@ using vNext.Core.Identity;
 using vNext.Core.Interfaces;
 using vNext.Core.Middleware;
 using vNext.Infrastructure.Data;
+using Ben.Diagnostics;
+using vNext.Core.Behaviours;
 
 namespace vNext.API
 {
@@ -42,6 +44,8 @@ namespace vNext.API
                 .AllowCredentials()));
 
             services.AddHttpContextAccessor();
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthenticatedRequestBehavior<,>));
 
             services.TryAddSingleton<ISecurityTokenFactory, SecurityTokenFactory>();
             
@@ -98,7 +102,7 @@ namespace vNext.API
             services.ConfigureSwaggerGen(options => { });
             services.AddSingleton<IDateTime, MachineDateTime>();
             services.AddSignalR();
-            services.AddSingleton<ISqlConnectionManager, SqlConnectionManager>();
+            services.AddSingleton<IDbConnectionManager, SqlConnectionManager>();
             services.AddSingleton<ISecurityTokenFactory, SecurityTokenFactory>();            
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddMvcCore()
@@ -111,7 +115,9 @@ namespace vNext.API
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {            
+        {
+            app.UseBlockingDetection();
+
             if (Configuration.GetValue<bool>("isTest"))
                 app.UseMiddleware<AutoAuthenticationMiddleware>();
 

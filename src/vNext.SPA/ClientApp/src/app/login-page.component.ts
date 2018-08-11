@@ -24,7 +24,8 @@ export class LoginPageComponent {
     this._authService
       .tryToLogin({
         code: $event.value.username,
-        password: $event.value.password
+        password: $event.value.password,
+        customerKey: 'QUINNTYNE_DEV'
       })
       .pipe(
         switchMap(() => this.tryToLoadDashboards()),

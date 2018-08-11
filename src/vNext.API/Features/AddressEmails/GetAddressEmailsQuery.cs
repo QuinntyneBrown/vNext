@@ -1,9 +1,7 @@
-using vNext.Core.Interfaces;
-using Dapper;
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -11,7 +9,7 @@ namespace vNext.API.Features.AddressEmails
 {
     public class GetAddressEmailsQuery
     {
-        public class Request : IRequest<Response> { }
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -20,15 +18,15 @@ namespace vNext.API.Features.AddressEmails
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response()
                     {

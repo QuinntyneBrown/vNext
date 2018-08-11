@@ -20,7 +20,7 @@ namespace vNext.API.Features.Notes
             }
         }
 
-        public class Request : IRequest<Response> {
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
             public NoteDto Note { get; set; }
         }
 
@@ -31,17 +31,17 @@ namespace vNext.API.Features.Notes
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler( ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler( IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {                    
                     return new Response()
                     {
-                        NoteId = await new Prodcedure().ExecuteAsync(request.Note.NoteId, request.Note.Note, connection)
+                        NoteId = await new Prodcedure().ExecuteAsync(request, connection)
                     };
                 }
             }
@@ -49,15 +49,15 @@ namespace vNext.API.Features.Notes
 
         public class Prodcedure
         {
-            public async Task<int> ExecuteAsync(int noteId, string note, SqlConnection connection)
+            public async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 
-                dynamicParameters.AddDynamicParams(new { noteId, note });
+                dynamicParameters.AddDynamicParams(new { request.Note.NoteId, request.Note.Note });
 
-                var parameterDirection = noteId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
+                var parameterDirection = request.Note.NoteId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
 
-                dynamicParameters.Add("NoteId", noteId, DbType.Int16, parameterDirection);
+                dynamicParameters.Add("NoteId", request.Note.NoteId, DbType.Int16, parameterDirection);
 
                 await connection.ExecuteProcAsync("[Comsense].[ProcNoteSave]", dynamicParameters);
 

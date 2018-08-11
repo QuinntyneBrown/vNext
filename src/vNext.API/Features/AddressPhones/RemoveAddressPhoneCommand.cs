@@ -1,34 +1,30 @@
 using MediatR;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Data;
-using Dapper;
-using System;
-using vNext.Core.Interfaces;
-using vNext.Core.Models;
-using vNext.Core.Interfaces;
+using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
+using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.AddressPhones
 {
     public class RemoveAddressPhoneCommand
     {
-        public class Request : IRequest
+        public class Request : AuthenticatedRequest, IRequest
         {
             public AddressPhoneDto AddressPhone { get; set; }
         }
 
         public class Handler : IRequestHandler<Request>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     await connection.ExecuteProcAsync("[Comsense].[ProcAddressPhoneDelete]", new { request.AddressPhone.AddressPhoneId });
                 }

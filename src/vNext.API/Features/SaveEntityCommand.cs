@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using vNext.API.Features.Concurrencies;
@@ -7,7 +8,7 @@ namespace vNext.API.Features
 {
     public static class SaveEntityCommandHandler
     {
-        public static async Task<short> Handle<TRquest>(TRquest request, Func<TRquest, SqlConnection,Task<short>> procedure, string domain, int id, int version, SqlConnection connection)
+        public static async Task<TResponse> Handle<TRquest, TResponse>(TRquest request, Func<TRquest, IDbConnection,Task<TResponse>> procedure, string domain, int id, int version, IDbConnection connection)
         {
             var newVersion = (await ConcurrencyGetVersionByDomainAndIdQuery.Procedure
                 .ExecuteAsync(new ConcurrencyGetVersionByDomainAndIdQuery.Request()
@@ -28,7 +29,7 @@ namespace vNext.API.Features
                     Concurrency = new ConcurrencyDto()
                     {
                         Domain = domain,
-                        Id = result,
+                        Id = Convert.ToInt32(result),
                         Version = version,
                     }
                 }, connection);

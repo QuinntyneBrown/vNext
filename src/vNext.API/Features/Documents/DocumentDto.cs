@@ -1,6 +1,6 @@
 using vNext.Core.Models;
 
-namespace VNext.API.Features.Documents
+namespace vNext.API.Features.Documents
 {
     public class DocumentDto
     {        

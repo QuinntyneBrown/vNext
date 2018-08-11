@@ -5,3 +5,14 @@ body, html {
   height: 100%;
   width: 100%;
 }
+
+@import "~igniteui-angular/lib/core/styles/themes/index";
+
+$company-color: #2ab759;
+$secondary-color: #f96a88; 
+
+$my-color-palette: igx-palette( $primary: $company-color, $secondary: $secondary-color );
+
+@include igx-core();
+
+@include igx-theme($my-color-palette);

@@ -4,12 +4,12 @@ namespace vNext.Core.DomainEvents
 {
     public class EntitySaved: INotification
     {
-        public EntitySaved(string domain, int id)
+        public EntitySaved(string requestType, dynamic id)
         {
             Payload = new
             {
                 Id = id,
-                Domain = "Region"
+                RequestType = requestType,                
             };
         }
         public string Type { get; set; } = nameof(EntitySaved);

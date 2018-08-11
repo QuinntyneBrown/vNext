@@ -1,0 +1,12 @@
+<cs-title-bar>
+  Warehouses
+</cs-title-bar>
+
+<button mat-button>
+  Create Warehouse
+</button>
+
+<cs-grid [data]="warehouses$ | async"
+         [columns]="columns">
+
+</cs-grid>

@@ -14,7 +14,7 @@ namespace vNext.API.Features.Concurrencies
 {
     public class ConcurrencyGetVersionByDomainAndIdQuery
     {
-        public class Request : IRequest<Response> {
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
             public int Version { get; set; }
             public string Domain { get; set; }
             public int Id { get; set; }
@@ -28,9 +28,9 @@ namespace vNext.API.Features.Concurrencies
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-			    => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+			    => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -38,7 +38,7 @@ namespace vNext.API.Features.Concurrencies
                 {
                     var result = default(short);
 
-                    using (var connection = _sqlConnectionManager.GetConnection())
+                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                     {
                         connection.Open();
 
@@ -54,7 +54,7 @@ namespace vNext.API.Features.Concurrencies
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

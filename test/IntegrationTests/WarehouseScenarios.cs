@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Xunit;
 using vNext.API.Features.Warehouses;
 using vNext.Core.Extensions;
+using System.Linq;
 
 namespace IntegrationTests.Features
 {
@@ -16,6 +17,18 @@ namespace IntegrationTests.Features
                     .GetAsync<GetWarehouseByIdQuery.Response>(Get.GetById(1));
 
                 Assert.True(response.Warehouse.WarehouseId == 1);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetWarehouses()
+        {
+            using (var server = CreateServer())
+            {
+                var response = await server.CreateClient()
+                    .GetAsync<GetWarehousesQuery.Response>(Get.Warehouses);
+
+                Assert.True(response.Warehouses.Count() > 0);
             }
         }
 

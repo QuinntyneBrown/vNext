@@ -11,7 +11,7 @@ namespace vNext.API.Features.Notes
 {
     public class GetNoteIdByNoteQuery
     {
-        public class Request : IRequest<Response> {
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
             public string Note { get; set; }
         }
 
@@ -22,13 +22,13 @@ namespace vNext.API.Features.Notes
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response()
                     {
@@ -39,7 +39,7 @@ namespace vNext.API.Features.Notes
         }
 
         public class Procedure {
-            public async Task<int> ExecuteAsync(SqlConnection connection, string note)
+            public async Task<int> ExecuteAsync(IDbConnection connection, string note)
             {
                 var dynamicParameters = new DynamicParameters();
 

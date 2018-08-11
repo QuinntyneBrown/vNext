@@ -18,7 +18,8 @@ namespace IntegrationTests
                     .PostAsAsync<AuthenticateCommand.Request, AuthenticateCommand.Response>(Post.Token, new AuthenticateCommand.Request()
                     {
                         Code = "Comsense1",
-                        Password = "Comsense1;;"
+                        Password = "Comsense1;;",
+                        CustomerKey = "QUINNTYNE_DEV"
                     });
 
                 Assert.NotEqual(default(int), response.UserId);

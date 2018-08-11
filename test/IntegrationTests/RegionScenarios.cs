@@ -61,7 +61,7 @@ namespace IntegrationTests.Features
             {
                 var region = new RegionDto()
                 {
-                    Code = "QBLOG",
+                    Code = "WAKANDA",
                     ConcurrencyVersion = 0,
                     Description = "QB Region",
                     Note = new vNext.API.Features.Notes.NoteDto()

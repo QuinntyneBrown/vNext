@@ -31,6 +31,11 @@
     <TypeScriptCompile Include="ClientApp\src\app\dashboard-tiles-management\add-dashboard-tile-overlay.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app\territories\" />
+    <Folder Include="ClientApp\src\app\regions\" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">

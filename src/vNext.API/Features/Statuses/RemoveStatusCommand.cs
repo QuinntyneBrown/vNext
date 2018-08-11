@@ -9,7 +9,7 @@ namespace vNext.API.Features.Statuses
 {
     public class RemoveStatusCommand
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public int StatusId { get; set; }
             public int ConcurrencyVersion { get; set; }
@@ -22,13 +22,13 @@ namespace vNext.API.Features.Statuses
 
         public class Handler : IRequestHandler<Request,Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-                => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response()
                     {
@@ -40,7 +40,7 @@ namespace vNext.API.Features.Statuses
 
         public static class Procedure
         {
-            public static async Task<int> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 return await connection.ExecuteProcAsync("[Comsense].[ProcStatusDelete]", new { request.StatusId });
             }

@@ -1,10 +1,10 @@
 using Dapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -12,7 +12,7 @@ namespace vNext.API.Features.Users
 {
     public class SaveUserCommand
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public UserDto User { get; set; }
         }
@@ -24,23 +24,18 @@ namespace vNext.API.Features.Users
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            private readonly IHttpContextAccessor _httpContextAccessor;
-            public Handler(IHttpContextAccessor httpContextAccessor, ISqlConnectionManager sqlConnectionManager)
-            {
-                _sqlConnectionManager = sqlConnectionManager;
-                _httpContextAccessor = httpContextAccessor;
-            }
+            private readonly IDbConnectionManager _dbConnectionManager;
+
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
-                {
-                    var code = _httpContextAccessor.HttpContext.User.Identity.Name;
-
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
+                {                    
                     return new Response()
                     {
-                        UserId = await Procedure.ExecuteAsync(request,connection,code)
+                        UserId = await Procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
@@ -48,11 +43,13 @@ namespace vNext.API.Features.Users
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, SqlConnection connection, string createdByUserCode = null)
+            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 
-                var noteId = await new Notes.SaveNoteCommand.Prodcedure().ExecuteAsync(0, request.User.Note.Note, connection);
+                var noteId = await new Notes.SaveNoteCommand.Prodcedure().ExecuteAsync(new Notes.SaveNoteCommand.Request() {
+                    Note = request.User.Note
+                }, connection);
                 
                 dynamicParameters.AddDynamicParams(new
                 {
@@ -68,17 +65,13 @@ namespace vNext.API.Features.Users
                     noteId
                 });
 
-                if (request.User.UserId == default(int))
-                {                    
+                if (request.User.UserId == default(int))                    
                     dynamicParameters.AddDynamicParams(new
                     {
-                        CreatedDateTime = System.DateTime.UtcNow,
-                        UserId = await UserGetIdQuery.Procedure.ExecuteAsync(new UserGetIdQuery.Request() {
-                            Code = createdByUserCode
-                        }, connection)
-                });
-                }
-
+                        request.CurrentDateTime,
+                        request.UserId
+                    });
+                
                 var parameterDirection = request.User.UserId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
 
                 dynamicParameters.Add("UserId", request.User.UserId, DbType.Int16, parameterDirection);

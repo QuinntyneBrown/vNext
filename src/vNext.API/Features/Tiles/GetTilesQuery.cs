@@ -10,7 +10,7 @@ namespace vNext.API.Features.Tiles
 {
     public class GetTilesQuery
     {
-        public class Request : IRequest<Response> { }
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -19,15 +19,15 @@ namespace vNext.API.Features.Tiles
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response()
                     {

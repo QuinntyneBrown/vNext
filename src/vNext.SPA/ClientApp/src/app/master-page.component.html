@@ -9,6 +9,8 @@
   <mat-sidenav #drawer class="sidenav" mode="side" (click)="drawer.close()">
     <button mat-button [routerLink]="['/']">Home</button>
     <button mat-button [routerLink]="['/contacts']">Contacts</button>
+    <button mat-button [routerLink]="['/users']">Users</button>
+    <button mat-button [routerLink]="['/warehouses']">Warehouses</button>
     <button mat-button (click)="signOut()">Sign Out</button>
   </mat-sidenav>
   <mat-sidenav-content>

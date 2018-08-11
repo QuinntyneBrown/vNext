@@ -12,7 +12,7 @@ namespace vNext.API.Features.Dashboards
 {
     public class DashboardGetByUserIdQuery
     {
-        public class Request : IRequest<Response> {
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
             public int UserId { get; set; }
         }
 
@@ -23,13 +23,13 @@ namespace vNext.API.Features.Dashboards
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-			    => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+			    => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     var dashboardProjections = await Procedure.ExecuteAsync(request, connection);
                     IEnumerable<DashboardDto> dashboards = dashboardProjections.Select(x => DashboardDto.FromDashboard(x));
@@ -44,7 +44,7 @@ namespace vNext.API.Features.Dashboards
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 var dashboards = await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcDashboardGetByUserId]", new { request.UserId });
 

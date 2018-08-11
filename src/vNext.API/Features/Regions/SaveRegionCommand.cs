@@ -1,14 +1,13 @@
 using Dapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
-using vNext.Core;
+using vNext.Core.Common;
 using vNext.Core.DomainEvents;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
@@ -25,10 +24,8 @@ namespace vNext.API.Features.Regions
             }
         }
 
-        public class Request : IRequest<Response>, ILoggableRequest {
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
             public RegionDto Region { get; set; }
-            public int CreatedByUserId { get; set; }
-            public DateTime CreatedDateTime { get; set; }
         }
 
         public class Response
@@ -40,77 +37,73 @@ namespace vNext.API.Features.Regions
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IMediator _mediator;
             public Handler(
-                ISqlConnectionManager sqlConnectionManager,
+                IDbConnectionManager dbConnectionManager,
                 IMediator mediator
                 )
             {
                 _mediator = mediator;                
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                var result = default(short);
-
-
-                using (var connection = _sqlConnectionManager.GetConnection())
+                var response = default(Response);
+                
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     connection.Open();
 
-                    result = await SaveEntityCommandHandler.Handle(request, (x, y) => Procedure.ExecuteAsync(x, y), "Region", request.Region.RegionId, request.Region.ConcurrencyVersion, connection);
+                    response = new Response(await SaveEntityCommandHandler.Handle(
+                        request,
+                        Procedure.ExecuteAsync,
+                        "Region",
+                        request.Region.RegionId,
+                        request.Region.ConcurrencyVersion,
+                        connection));
                 }
-
-
-
-                await _mediator?.Publish(new EntitySaved("Region", result));
-
-                return new Response(result);
+                
+                return response;
             }
         }
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
+                var noteId = await new Notes.SaveNoteCommand.Prodcedure().ExecuteAsync(new Notes.SaveNoteCommand.Request() {
+                    Note = request.Region.Note
+                }, connection);
 
-                var noteId = await new Notes.SaveNoteCommand.Prodcedure().ExecuteAsync(0, request.Region.Note.Note, connection);
+                var dynamicParameters = new DynamicParameters();
 
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                dynamicParameters.AddDynamicParams(new
                 {
-                    var dynamicParameters = new DynamicParameters();
+                    request.Region.RegionId,
+                    request.Region.Code,
+                    request.Region.Description,
+                    request.Region.CreatedDateTime,
+                    request.Region.CreatedByUserId,
+                    request.Region.Sort,
+                    noteId
+                });
 
+                if (request.Region.RegionId == default(int))
                     dynamicParameters.AddDynamicParams(new
                     {
-                        request.Region.RegionId,
-                        request.Region.Code,
-                        request.Region.Description,
-                        request.Region.CreatedDateTime,
-                        request.Region.CreatedByUserId,
-                        request.Region.Sort,
-                        noteId
+                        CreatedByUserId = request.UserId,
+                        CreatedDateTime = request.CurrentDateTime
                     });
 
-                    if(request.Region.RegionId == default(int))
-                        dynamicParameters.AddDynamicParams(new
-                        {
-                            request.CreatedByUserId,
-                            request.CreatedDateTime
-                        });
+                var parameterDirection = request.Region.RegionId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
 
-                    var parameterDirection = request.Region.RegionId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
+                dynamicParameters.Add("RegionId", request.Region.RegionId, DbType.Int16, parameterDirection);
 
-                    dynamicParameters.Add("RegionId", request.Region.RegionId, DbType.Int16, parameterDirection);
+                await connection.ExecuteProcAsync("[Common].[ProcRegionSave]", dynamicParameters);
 
-                    await connection.ExecuteProcAsync("[Common].[ProcRegionSave]", dynamicParameters);
-
-                    transaction.Complete();
-
-                    return dynamicParameters.Get<short>("@RegionId");
-
-                }
+                return dynamicParameters.Get<short>("@RegionId");
 
             }
         }

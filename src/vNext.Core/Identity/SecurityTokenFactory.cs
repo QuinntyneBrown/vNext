@@ -14,7 +14,7 @@ namespace vNext.Core.Identity
         public SecurityTokenFactory(IConfiguration configuration)
             => _configuration = configuration;
         
-        public string Create(string uniqueName, int userId)
+        public string Create(string uniqueName, int userId, string customerKey)
         {
             var now = DateTime.UtcNow;
             var nowDateTimeOffset = new DateTimeOffset(now);
@@ -28,7 +28,8 @@ namespace vNext.Core.Identity
                 };
 
             claims.Add(new Claim("UserId", $"{userId}"));
-            
+            claims.Add(new Claim("CustomerKey", $"{customerKey}"));
+
             var jwt = new JwtSecurityToken(
                 issuer: _configuration["Authentication:JwtIssuer"],
                 audience: _configuration["Authentication:JwtAudience"],

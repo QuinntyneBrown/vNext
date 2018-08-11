@@ -16,6 +16,7 @@ namespace vNext.API.Features.Users
         {
             public string Code { get; set; }
             public string Password { get; set; }
+            public string CustomerKey { get; set; }
         }
 
         public class Response
@@ -27,21 +28,21 @@ namespace vNext.API.Features.Users
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly ISecurityTokenFactory _securityTokenFactory;
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager, ISecurityTokenFactory securityTokenFactory)
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager, ISecurityTokenFactory securityTokenFactory)
             {
-                _sqlConnectionManager = sqlConnectionManager;
+                _dbConnectionManager = dbConnectionManager;
                 _securityTokenFactory = securityTokenFactory;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using(var connection = _sqlConnectionManager.GetConnection())
+                using(var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     var userId = await Procedure.ExecuteAsync(request, connection);
                     return new Response()
                     {
-                        AccessToken = _securityTokenFactory.Create(request.Code, userId),
+                        AccessToken = _securityTokenFactory.Create(request.Code, userId, request.CustomerKey),
                         UserId = userId
                     };
                 }
@@ -50,7 +51,7 @@ namespace vNext.API.Features.Users
 
         public static class Procedure
         {
-            public static async Task<int> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("Code", request.Code);

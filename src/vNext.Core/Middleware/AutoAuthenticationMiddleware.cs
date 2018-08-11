@@ -17,7 +17,7 @@ namespace vNext.Core.Middleware
 
         public async Task Invoke(HttpContext httpContext)
         {
-            var token = _securityTokenFactory.Create("Comsense1",2);
+            var token = _securityTokenFactory.Create("Comsense1",2,"QUINNTYNE_DEV");
             httpContext.Request.Headers.Add("Authorization", $"Bearer {token}");
             await _next.Invoke(httpContext);
         }

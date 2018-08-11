@@ -8,22 +8,13 @@ export class Dashboard {
   }
 
   public dashboardId?: number = 0;
-
   public code: string;
-
   public userId?: any;
-
   public changeState?: string;
-
   public version?: number;
-
   public sort?: any;
-
   public auditLogNoteId: number;
-
-  public settings: DashboardSettings = new DashboardSettings();
-  
+  public settings: DashboardSettings = new DashboardSettings();  
   public dashboardTiles: Array<DashboardTile<DashboardTileSettings>> = [];
-
   public concurrencyVersion: number;
 }

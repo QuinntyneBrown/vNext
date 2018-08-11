@@ -9,7 +9,7 @@ namespace vNext.API.Features.Sizes
 {
     public class GetSizeByIdQuery
     {
-        public class Request : IRequest<Response>
+        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
             public int SizeId { get; set; }
         }
@@ -21,13 +21,13 @@ namespace vNext.API.Features.Sizes
 
         public class Handler : IRequestHandler<Request, Response>
         {
-            private readonly ISqlConnectionManager _sqlConnectionManager;
-            public Handler(ISqlConnectionManager sqlConnectionManager)
-			    => _sqlConnectionManager = sqlConnectionManager;
+            private readonly IDbConnectionManager _dbConnectionManager;
+            public Handler(IDbConnectionManager dbConnectionManager)
+			    => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var connection = _sqlConnectionManager.GetConnection())
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response()
                     {
@@ -39,7 +39,7 @@ namespace vNext.API.Features.Sizes
 
         public static class Procedure
         {
-            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, SqlConnection connection)
+            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, System.Data.IDbConnection connection)
             {
                 return await connection.QuerySingleProcAsync<QueryProjectionDto>("[Comsense].[ProcSizeGet]", new { request.SizeId });
             }

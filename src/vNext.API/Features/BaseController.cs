@@ -33,17 +33,8 @@ namespace vNext.API.Features
                 var @object = _dictionary.GetOrAdd($"{_domain}{id}", new object());
 
                 lock (@object)
-                {
-                    switch (request)
-                    {
-                        case ILoggableRequest loggableRequest:
-                            loggableRequest.CreatedByUserId = Convert.ToInt32(_httpContextAccessor.HttpContext.User.Claims.Single(x => x.Type == "UserId").Value);
-                            loggableRequest.CreatedDateTime = _dateTime.UtcNow;
-                            break;
-                    }
-
                     return _mediator.Send(request).GetAwaiter().GetResult();
-                }
+                
             }catch(Exception e)
             {
                 return new BadRequestObjectResult(e);

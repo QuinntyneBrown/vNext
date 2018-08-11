@@ -1,4 +1,4 @@
-import { Component, Input, Injector, ComponentRef, EventEmitter, Output, ComponentFactoryResolver, ViewChild, ViewContainerRef } from "@angular/core";
+import { Component, Input, Injector, ComponentRef, EventEmitter, Output, ComponentFactoryResolver, ViewChild, ViewContainerRef, ChangeDetectionStrategy } from "@angular/core";
 import { Subject } from "rxjs";
 import { Dashboard } from "../dashboards/dashboard.model";
 import { Overlay } from "@angular/cdk/overlay";
@@ -11,57 +11,58 @@ import { TileStore } from "../tiles/tile-store";
 import { DashboardTileComponent } from "../dashboard-tiles/dashboard-tile.component";
 import { DashboardStore } from "./dashboard-store";
 import { BehaviorSubject } from "rxjs";
-import { tap, takeUntil } from "rxjs/operators";
+import { tap, takeUntil, filter } from "rxjs/operators";
 
 @Component({
-    templateUrl: "./dashboard-grid.component.html",
-    styleUrls: ["./dashboard-grid.component.css"],
-    selector: "cs-dashboard-grid"
+  templateUrl: "./dashboard-grid.component.html",
+  styleUrls: ["./dashboard-grid.component.css"],
+  selector: "cs-dashboard-grid"
 })
 export class DashboardGridComponent { 
   constructor(
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _dashboardStore: DashboardStore,
-    private _injector: Injector,
-    private _overlay: Overlay,
-    private _tileStore: TileStore
+    private readonly _componentFactoryResolver: ComponentFactoryResolver,
+    private readonly _dashboardStore: DashboardStore,
+    private readonly _injector: Injector,
+    private readonly _overlay: Overlay,
+    private readonly _tileStore: TileStore
   ) { }
 
   ngOnInit() {
     this.dashboard$
       .pipe(
-      tap((dashboard) => {
-        if (this._currentDashboardId == dashboard.dashboardId && this._dashboardTileComponentRefs.length > 0) {
-          this._dashboardTileComponentRefs.forEach((dtcr) => {
-            var existingDasboardTile = dashboard.dashboardTiles.find(x => x.dashboardTileId == dtcr.instance.dashboardTile.dashboardTileId);
+        filter(x => x != null),
+        tap((dashboard) => {
+          if (this._currentDashboardId == dashboard.dashboardId && this._dashboardTileComponentRefs.length > 0) {
+            this._dashboardTileComponentRefs.forEach((dtcr) => {
+              var existingDasboardTile = dashboard.dashboardTiles.find(x => x.dashboardTileId == dtcr.instance.dashboardTile.dashboardTileId);
 
-            if (!existingDasboardTile)
-              dtcr.destroy();
-          });
+              if (!existingDasboardTile)
+                dtcr.destroy();
+            });
 
-          dashboard.dashboardTiles.forEach((dt) => {
-            var existingDasboardTileComponent = this._dashboardTileComponentRefs.find(x => x.instance.dashboardTile.dashboardTileId == dt.dashboardTileId);
+            dashboard.dashboardTiles.forEach((dt) => {
+              var existingDasboardTileComponent = this._dashboardTileComponentRefs.find(x => x.instance.dashboardTile.dashboardTileId == dt.dashboardTileId);
 
-            if (!existingDasboardTileComponent) {
-              this.addDashboardComponentRef(dt);
-            } else {
-              existingDasboardTileComponent.instance.dashboardTile = dt;
-            }
-          });
+              if (!existingDasboardTileComponent) {
+                this.addDashboardComponentRef(dt);
+              } else {
+                existingDasboardTileComponent.instance.dashboardTile = dt;
+              }
+            });
 
-        } else {
+          } else {
 
-          this._dashboardTileComponentRefs.forEach((dtc) => {
-            dtc.destroy()
-          });
+            this._dashboardTileComponentRefs.forEach((dtc) => {
+              dtc.destroy()
+            });
 
-          this._dashboardTileComponentRefs = [];
+            this._dashboardTileComponentRefs = [];
           
-          dashboard.dashboardTiles.forEach((dashboardTile) => this.addDashboardComponentRef(dashboardTile));
+            dashboard.dashboardTiles.forEach((dashboardTile) => this.addDashboardComponentRef(dashboardTile));
 
-          this._currentDashboardId = dashboard.dashboardId;
-        }  
-      }),
+            this._currentDashboardId = dashboard.dashboardId;
+          }
+        }),
         takeUntil(this.onDestroy)
       ).subscribe();
   }
@@ -136,9 +137,7 @@ export class DashboardGridComponent {
   public dashboard$: BehaviorSubject<Dashboard>;
 
 
-  public _domainDashboardTiles: Array<any> = [
-    
-  ];
+  public _domainDashboardTiles: Array<any> = [];
 
   public _dashboardTileComponentRefs:Array<ComponentRef<any>> = [];
 

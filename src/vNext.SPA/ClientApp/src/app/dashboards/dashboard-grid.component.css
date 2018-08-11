@@ -1,6 +1,6 @@
 :host {
   display: grid;
-  background-color: var(--default-color,rgb(245,245,245));
+  background-color: var(--default-color,rgb(250,250,250));
   grid-auto-rows: 360px;
   grid-auto-columns: 240px;
   grid-gap: 20px;
