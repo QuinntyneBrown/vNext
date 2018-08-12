@@ -2,11 +2,25 @@ using System.Threading.Tasks;
 using Xunit;
 using vNext.API.Features.Tiles;
 using vNext.Core.Extensions;
+using System.Linq;
 
 namespace IntegrationTests.Features
 {
     public class TileScenarios: TileScenarioBase
     {
+
+        [Fact]
+        public async Task ShouldGetAll()
+        {
+            using (var server = CreateServer())
+            {
+                var response = await server.CreateClient()
+                    .GetAsync<GetTilesQuery.Response>(Get.Tiles);
+
+                Assert.True(response.Tiles.Count() > 1);
+            }
+        }
+
         [Fact]
         public async Task ShouldGetTileById()
         {

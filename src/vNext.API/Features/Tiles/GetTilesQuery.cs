@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 using vNext.Core.Extensions;
+using vNext.Core.Common;
+using System.Data;
 
 namespace vNext.API.Features.Tiles
 {
     public class GetTilesQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -31,8 +33,16 @@ namespace vNext.API.Features.Tiles
                 {
                     return new Response()
                     {
-                        Tiles = await connection.QueryProcAsync<TileDto>("[Comsense].[ProcTileGetAll]")
+                        Tiles = await Procedure.ExecuteAsync(request, connection)
                     };
+                }
+            }
+
+            public static class Procedure
+            {
+                public static async Task<IEnumerable<TileDto>> ExecuteAsync(Request request, IDbConnection connection)
+                {
+                    return await connection.QueryProcAsync<TileDto>("[Comsense].[ProcTileGetAll]", new { });
                 }
             }
         }

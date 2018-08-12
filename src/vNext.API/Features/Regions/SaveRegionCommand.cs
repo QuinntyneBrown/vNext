@@ -3,7 +3,7 @@ using FluentValidation;
 using MediatR;
 using System;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;

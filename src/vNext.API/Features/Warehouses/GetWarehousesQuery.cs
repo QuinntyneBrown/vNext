@@ -1,7 +1,7 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +44,7 @@ namespace vNext.API.Features.Warehouses
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QueryProcAsync<QueryProjectionDto>("[Product].[ProcWarehouseGetAll]");
             }

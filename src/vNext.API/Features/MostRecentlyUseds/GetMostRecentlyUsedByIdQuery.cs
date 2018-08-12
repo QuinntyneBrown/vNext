@@ -1,5 +1,5 @@
 using MediatR;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -40,7 +40,7 @@ namespace vNext.API.Features.MostRecentlyUseds
 
         public static class Procedure
         {
-            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QuerySingleProcAsync<QueryProjectionDto>("[Audit].[ProcMostRecentlyUsedGet]", new { request.MostRecentlyUsedId });
             }

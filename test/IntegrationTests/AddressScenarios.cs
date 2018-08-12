@@ -60,5 +60,31 @@ namespace IntegrationTests.Features
                 Assert.True(response.AddressId == 72);
             }
         }
+
+        [Fact]
+        public async Task ShouldSaveMinimalAddress()
+        {
+            using (var server = CreateServer())
+            {
+                var response = await server.CreateClient()
+                    .PostAsAsync<SaveAddressCommand.Request, SaveAddressCommand.Response>(Post.Addresses, new SaveAddressCommand.Request()
+                    {
+                        Address = new AddressDto()
+                        {
+                            Address = "",
+                            City = "",
+                            PostalZipCode = "",
+                            County = "",
+                            CountrySubDivisionId = 1,
+                            Phone = "",
+                            Fax = "",
+                            Email = "",
+                            Website = ""
+                        }
+                    });
+
+                Assert.True(response.AddressId != default(int));
+            }
+        }
     }
 }

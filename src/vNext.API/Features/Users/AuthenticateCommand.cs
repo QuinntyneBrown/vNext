@@ -6,7 +6,7 @@ using System.Threading;
 using vNext.Core.Interfaces;
 using vNext.Core.Identity;
 using vNext.Core.Extensions;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace vNext.API.Features.Users
 {
@@ -51,7 +51,7 @@ namespace vNext.API.Features.Users
 
         public static class Procedure
         {
-            public static async Task<int> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
                 dynamicParameters.Add("Code", request.Code);

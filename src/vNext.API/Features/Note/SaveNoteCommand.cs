@@ -6,7 +6,7 @@ using Dapper;
 using vNext.Infrastructure.Data;
 using vNext.Core.Interfaces; using vNext.Core.Extensions;
 using FluentValidation;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace vNext.API.Features.Notes
 {

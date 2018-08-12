@@ -1,5 +1,5 @@
 using MediatR;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -47,7 +47,7 @@ namespace vNext.API.Features.Regions
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var result = await connection.ExecuteProcAsync("[Common].[ProcRegionDelete]", new { request.RegionId });
 

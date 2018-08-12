@@ -3,7 +3,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -54,7 +54,7 @@ namespace vNext.API.Features.Concurrencies
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

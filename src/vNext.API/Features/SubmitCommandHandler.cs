@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using System;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading.Tasks;
 using vNext.API.Features.Concurrencies;
 using vNext.Core.DomainEvents;
@@ -15,7 +15,7 @@ namespace vNext.API.Features
         public SubmitCommandHandler(IMediator mediator)
             => _mediator = mediator;
 
-        public async Task<TResponse> Handle<TRquest, TResponse>(TRquest request, Func<TRquest, SqlConnection, Task<TResponse>> procedure, string domain, int id, int version, SqlConnection connection)
+        public async Task<TResponse> Handle<TRquest, TResponse>(TRquest request, Func<TRquest, IDbConnection, Task<TResponse>> procedure, string domain, int id, int version, IDbConnection connection)
         {
             var newVersion = (await ConcurrencyGetVersionByDomainAndIdQuery.Procedure
                 .ExecuteAsync(new ConcurrencyGetVersionByDomainAndIdQuery.Request()

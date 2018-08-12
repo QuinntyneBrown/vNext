@@ -1,5 +1,5 @@
 using MediatR;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -40,7 +40,7 @@ namespace vNext.API.Features.Concurrencies
 
         public class Procedure
         {
-            public async Task<int> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public async Task<int> ExecuteAsync(Request request, IDbConnection connection)
                 => await connection.ExecuteProcAsync("[Comsense].[ProcConcurrencyTruncate]");
         }
     }

@@ -1,6 +1,6 @@
 using MediatR;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,7 +56,7 @@ namespace vNext.API.Features.DashboardTiles
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
                 => await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcDashboardTileGetByDashboardId]", new { request.DashboardId });
         }
     }

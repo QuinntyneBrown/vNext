@@ -1,7 +1,7 @@
 using Dapper;
 using MediatR;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;

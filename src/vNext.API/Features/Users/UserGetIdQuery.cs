@@ -1,7 +1,7 @@
 using Dapper;
 using MediatR;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -41,7 +41,7 @@ namespace vNext.API.Features.Users
 
         public static class Procedure
         {
-            public static async Task<short> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

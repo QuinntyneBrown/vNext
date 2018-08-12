@@ -5,7 +5,7 @@ using vNext.Core.Models;
 using vNext.Core.Interfaces;
 using vNext.Core.Extensions;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace vNext.API.Features.Dashboards
 {
@@ -43,7 +43,7 @@ namespace vNext.API.Features.Dashboards
 
         public static class Procedure
         {
-            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dashboard = await connection.QuerySingleProcAsync<QueryProjectionDto>($"[Common].[ProcDashboardGet]", new { request.DashboardId });
 

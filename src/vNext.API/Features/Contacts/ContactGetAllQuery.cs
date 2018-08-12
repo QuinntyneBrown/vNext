@@ -2,18 +2,18 @@ using Dapper;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using vNext.Core.Extensions;
+using vNext.Core.Common;
 using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Contacts
 {
     public class ContactGetAllQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -43,7 +43,7 @@ namespace vNext.API.Features.Contacts
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QueryAsync<QueryProjectionDto>(@"
                 SELECT 

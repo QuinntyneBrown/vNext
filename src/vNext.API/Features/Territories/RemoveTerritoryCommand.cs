@@ -1,5 +1,5 @@
 using MediatR;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;
@@ -39,7 +39,7 @@ namespace vNext.API.Features.Territories
 
         public static class Procedure
         {
-            public static async Task<int> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.ExecuteProcAsync("[Common].[ProcTerritoryDelete]", new { request.Territory.TerritoryId });
             }

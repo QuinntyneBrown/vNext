@@ -1,5 +1,5 @@
 using MediatR;
-using System.Data.SqlClient;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;
@@ -39,7 +39,7 @@ namespace vNext.API.Features.Statuses
 
         public static class Procedure
         {
-            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<QueryProjectionDto> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QuerySingleProcAsync<QueryProjectionDto>("[Comsense].[ProcStatusGet]", new { request.StatusId });
             }

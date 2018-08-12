@@ -1,13 +1,13 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
-
 
 namespace vNext.API.Features.Regions
 {
@@ -43,7 +43,7 @@ namespace vNext.API.Features.Regions
 
         public static class Procedure
         {
-            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, System.Data.IDbConnection connection)
+            public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
                 => await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcRegionGetAll]");
         }
 
