@@ -1,15 +1,10 @@
 using Dapper;
 using FluentValidation;
 using MediatR;
-using System;
-using System.Data;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 using vNext.API.Features.Notes;
-using vNext.Core.Common;
-using vNext.Core.DomainEvents;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 

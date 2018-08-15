@@ -19,9 +19,7 @@ namespace vNext.API.Features.Dashboards
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             public Handler(IDbConnectionManager dbConnectionManager)
-            {
-                _dbConnectionManager = dbConnectionManager;
-            }
+                => _dbConnectionManager = dbConnectionManager;
 
 
             public async Task Handle(Request request, CancellationToken cancellationToken)

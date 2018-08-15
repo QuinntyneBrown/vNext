@@ -1,12 +1,11 @@
 using Dapper;
 using MediatR;
 using System.Data;
-using System.Threading.Tasks;
 using System.Threading;
-using vNext.Core.Interfaces;
-using vNext.Core.Identity;
+using System.Threading.Tasks;
 using vNext.Core.Extensions;
-using System.Data;
+using vNext.Core.Identity;
+using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Users
 {

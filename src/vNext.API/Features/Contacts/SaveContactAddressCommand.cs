@@ -32,10 +32,8 @@ namespace vNext.ContactService.ContactAddresses
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler( IDbConnectionManager dbConnectionManager)
-            {
-                _dbConnectionManager = dbConnectionManager;
-            }
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {

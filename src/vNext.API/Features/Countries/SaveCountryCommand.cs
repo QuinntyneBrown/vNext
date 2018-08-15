@@ -1,11 +1,10 @@
-using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Data;
 using Dapper;
-using vNext.Core.Interfaces;
-using vNext.Core.Extensions;
 using FluentValidation;
+using MediatR;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Countries
@@ -32,10 +31,8 @@ namespace vNext.API.Features.Countries
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler( IDbConnectionManager dbConnectionManager)
-            {
-                _dbConnectionManager = dbConnectionManager;
-            }
+            public Handler(IDbConnectionManager dbConnectionManager)
+                => _dbConnectionManager = dbConnectionManager;
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
