@@ -1,5 +1,5 @@
 :host {
-  background-color:red;
+  background-color:#fff;
   overflow:auto;
   height:calc(100vh - 144px);
 }

@@ -9,6 +9,8 @@ import { LoginPageComponent } from './login-page.component';
 import { ContactsPageComponent } from './contacts/contacts-page.component';
 import { UsersPageComponent } from './users/users-page.component';
 import { WarehousesPageComponent } from './warehouses/warehouses-page.component';
+import { ContactPageComponent } from './contacts/contact-page.component';
+import { AddressesResolver } from './addresses/addresses-resolver';
 
 export const routes: Routes = [
   {
@@ -33,6 +35,20 @@ export const routes: Routes = [
       {
         path: 'contacts',
         component: ContactsPageComponent,
+      },
+      {
+        path: 'contact/create',
+        component: ContactPageComponent,
+        resolve: {
+          resolveAddresses: AddressesResolver
+        }
+      },
+      {
+        path: 'contact/edit/:id',
+        component: ContactPageComponent,
+        resolve: {
+          resolveAddresses: AddressesResolver
+        }
       },
       {
         path: 'users',

@@ -1,21 +1,21 @@
 using vNext.Core.Models;
 
-namespace vNext.API.Features.CountrySubDivisions
+namespace vNext.API.Features.CountrySubdivisions
 {
-    public class CountrySubDivisionDto
+    public class CountrySubdivisionDto
     {        
-        public int CountrySubDivisionId { get; set; }
+        public int CountrySubdivisionId { get; set; }
         public string Code { get; set; }
         public int CountryId { get; set; }
         public string Description { get; set; }
 
-        public static CountrySubDivisionDto FromCountrySubDivision(CountrySubDivision countrySubDivision)
-            => new CountrySubDivisionDto
+        public static CountrySubdivisionDto FromCountrySubdivision(CountrySubdivision countrySubdivision)
+            => new CountrySubdivisionDto
             {
-                CountrySubDivisionId = countrySubDivision.CountrySubDivisionId,
-                Code = countrySubDivision.Code,
-                CountryId = countrySubDivision.CountryId,
-                Description = countrySubDivision.Description
+                CountrySubdivisionId = countrySubdivision.CountrySubdivisionId,
+                Code = countrySubdivision.Code,
+                CountryId = countrySubdivision.CountryId,
+                Description = countrySubdivision.Description
             };
     }
 }

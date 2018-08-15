@@ -1,6 +1,7 @@
-import { Component, ViewChild, Input } from "@angular/core";
+import { Component, ViewChild, Input, NgZone, EventEmitter, Output } from "@angular/core";
 import { Subject } from "rxjs";
 import { IgxGridComponent } from "igniteui-angular";
+import { debounce } from "../core/debounce";
 
 @Component({
   templateUrl: "./grid.component.html",
@@ -8,7 +9,11 @@ import { IgxGridComponent } from "igniteui-angular";
   selector: "cs-grid"
 })
 export class GridComponent { 
+  constructor(
+    private readonly _zone: NgZone
+  ) {
 
+  }
   @Input()
   public columns: any[] = [];
 
@@ -24,8 +29,12 @@ export class GridComponent {
     this.afterViewInit = true;
   }
 
+  @Output()
+  cellClick: EventEmitter<any> = new EventEmitter();
+  
   ngDoCheck() {
-    if (this.grid && this.afterViewInit)
+    if (this.grid && this.afterViewInit) {
       this.grid.reflow();
+    }
   }
 }

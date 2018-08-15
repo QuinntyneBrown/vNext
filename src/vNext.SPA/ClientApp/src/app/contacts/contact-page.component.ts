@@ -1,9 +1,9 @@
 import { Component, ViewChild, HostBinding, ViewContainerRef, ComponentRef, ComponentFactoryResolver, Injector } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Subject, BehaviorSubject } from "rxjs";
-import { map, takeUntil, tap } from "rxjs/operators";
+import { map, takeUntil, tap, switchMap } from "rxjs/operators";
 import { AddressConverter } from "../addresses/address-converter";
 import { AddressService } from "../addresses/address.service";
 import { EditAddressOverlay } from "../addresses/edit-address-overlay";
@@ -36,6 +36,7 @@ export class ContactPageComponent implements IDeactivatable {
   }
 
   constructor(
+    private _activatedRoute: ActivatedRoute,
     private _addressConvert: AddressConverter,
     private _addressService: AddressService,
     private _componentFactoryResolver: ComponentFactoryResolver,
@@ -58,6 +59,25 @@ export class ContactPageComponent implements IDeactivatable {
   target: ViewContainerRef;
 
   public onDestroy: Subject<void> = new Subject<void>();
+
+  public ngOnInit() {
+    const contactId = +this._activatedRoute.snapshot.params["id"];
+
+    if (contactId) {
+      this._contactService.getById({ contactId })
+        .pipe(
+          switchMap((contact: Contact) => {
+            this.contact$.next(contact);
+          
+            return this._addressService.getById({ addressId: contact.addressId });
+          }),
+          map(address => {
+            this.address$.next(address);
+          }),
+          takeUntil(this.onDestroy))
+        .subscribe();
+    }
+  }
 
   public handleSave($event:Contact) {
     const contact = new Contact();
@@ -102,19 +122,19 @@ export class ContactPageComponent implements IDeactivatable {
       .pipe(
         tap(x => {
           this.sideBarOpen = false;
-          ref.destroy();          
-          this.handleAddressOverlayResult(x.result.data[0].value);
+          ref.destroy();
+          this.handleAddressOverlayResult(x.addressId);
         })
       ).subscribe();
   }
 
   public handleAddressOverlayResult(addressId: any) {
     this.sideBarOpen = false;
-
+    
     if (!addressId) return;
 
     this._addressService
-      .getById(addressId)
+      .getById({ addressId: addressId})
       .pipe(
         takeUntil(this.onDestroy),
         map(x => {

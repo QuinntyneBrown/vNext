@@ -20,6 +20,6 @@ namespace vNext.Core.Models
         public string City { get; set; }
         public string PostalZipCode { get; set; }
         public string County { get; set; }
-        public int CountrySubDivisionId { get; set; }
+        public int CountrySubdivisionId { get; set; }
     }
 }

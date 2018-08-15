@@ -44,6 +44,7 @@ import { NewLineToHtmlPipe } from './new-line-to-html.pipe';
 import { CountryFilterPipe } from './country-filter.pipe';
 import { TitleBarComponent } from './title-bar.component';
 import { GridComponent } from './grid.component';
+import { SubTitleBarComponent } from './sub-title-bar.component';
 
 @NgModule({ 
   declarations: [
@@ -51,6 +52,7 @@ import { GridComponent } from './grid.component';
     DiscardChangesConfirmationOverlayComponent,
     NewLineToHtmlPipe,
     CountryFilterPipe,
+    SubTitleBarComponent,
     TitleBarComponent,
     GridComponent
   ],  
@@ -136,6 +138,7 @@ import { GridComponent } from './grid.component';
     GridComponent,
     NewLineToHtmlPipe,
     CountryFilterPipe,
+    SubTitleBarComponent,
     TitleBarComponent
   ],
   entryComponents: [

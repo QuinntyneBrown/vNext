@@ -6,6 +6,7 @@ using vNext.Core.Interfaces;
 using vNext.Core.Extensions;
 using System.Linq;
 using vNext.Core.Interfaces;
+using System.Data;
 
 namespace vNext.API.Features.Addresses
 {
@@ -31,13 +32,28 @@ namespace vNext.API.Features.Addresses
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var address = await connection.QuerySingleProcAsync<Address>("[Comsense].[ProcAddressGet]", new { request.AddressId});
-                    address.AddressPhones = (await connection.QueryProcAsync<AddressPhone>("[Comsense].[ProcAddressPhoneGetByAddressId]", new { request.AddressId })).ToList();
-                    address.AddressEmails = (await connection.QueryProcAsync<AddressEmail>("[Comsense].[ProcAddressEmailGetByAddressId]", new { request.AddressId })).ToList();
                     return new Response() {
-                        Address = AddressDto.FromAddress(address)
+                        Address = AddressDto.FromAddress(await Procedure.ExecuteAsync(request, connection))
                     };
                 }
+            }           
+        }
+
+
+        public static class Procedure
+        {
+            public static async Task<Address> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                var address = await connection.QuerySingleProcAsync<Address>("[Comsense].[ProcAddressGet]", new { request.AddressId });
+                var addressBase = await connection.QuerySingleProcAsync<AddressBase>("[Comsense].[ProcAddressBaseGet]", new { AddressBaseId = request.AddressId });
+                address.CountrySubdivisionId = addressBase.CountrySubdivisionId;
+                address.Address = addressBase.Address;
+                address.City = addressBase.City;
+                address.County = addressBase.County;
+                address.PostalZipCode = addressBase.PostalZipCode;
+                address.AddressPhones = (await connection.QueryProcAsync<AddressPhone>("[Comsense].[ProcAddressPhoneGetByAddressId]", new { request.AddressId })).ToList();
+                address.AddressEmails = (await connection.QueryProcAsync<AddressEmail>("[Comsense].[ProcAddressEmailGetByAddressId]", new { request.AddressId })).ToList();
+                return address;
             }
         }
     }

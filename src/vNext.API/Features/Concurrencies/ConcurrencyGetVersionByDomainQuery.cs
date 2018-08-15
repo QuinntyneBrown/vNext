@@ -1,7 +1,9 @@
 using MediatR;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -9,7 +11,7 @@ namespace vNext.API.Features.Concurrencies
 {
     public class ConcurrencyGetVersionByDomainQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
@@ -28,9 +30,17 @@ namespace vNext.API.Features.Concurrencies
                 {
                     return new Response()
                     {
-                        Concurrencies = await connection.QueryProcAsync<ConcurrencyDto>("[Comsense].[ProcConcurrencyGetVersionByDomain]")
+                        Concurrencies = await Procedure.ExecuteAsync(request,connection)
                     };
                 }
+            }
+        }
+
+        public static class Procedure
+        {
+            public static async Task<IEnumerable<ConcurrencyDto>> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                return await connection.QueryProcAsync<ConcurrencyDto>("[Comsense].[ProcConcurrencyGetVersionByDomain]");
             }
         }
     }

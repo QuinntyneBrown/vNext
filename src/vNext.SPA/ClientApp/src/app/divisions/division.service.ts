@@ -8,7 +8,7 @@ import { Division } from "./division.model";
 @Injectable()
 export class DivisionService {
   constructor(
-    @Inject(baseUrl) private _baseUrl:string,
+    @Inject(baseUrl) private _baseUrl:number,
     private _client: HttpClient
   ) { }
 
@@ -19,7 +19,7 @@ export class DivisionService {
       );
   }
 
-  public getById(options: { divisionId: string }): Observable<Division> {
+  public getById(options: { divisionId: number }): Observable<Division> {
     return this._client.get<{ division: Division }>(`${this._baseUrl}api/divisions/${options.divisionId}`)
       .pipe(
         map(x => x.division)
@@ -30,11 +30,11 @@ export class DivisionService {
     return this._client.delete<void>(`${this._baseUrl}api/divisions/${options.division.divisionId}`);
   }
 
-  public create(options: { division: Division }): Observable<{ divisionId: string }> {
-    return this._client.post<{ divisionId: string }>(`${this._baseUrl}api/divisions`, { division: options.division });
+  public create(options: { division: Division }): Observable<{ divisionId: number }> {
+    return this._client.post<{ divisionId: number }>(`${this._baseUrl}api/divisions`, { division: options.division });
   }
 
-  public update(options: { division: Division }): Observable<{ divisionId: string }> {
-    return this._client.put<{ divisionId: string }>(`${this._baseUrl}api/divisions`, { division: options.division });
+  public update(options: { division: Division }): Observable<{ divisionId: number }> {
+    return this._client.put<{ divisionId: number }>(`${this._baseUrl}api/divisions`, { division: options.division });
   }
 }

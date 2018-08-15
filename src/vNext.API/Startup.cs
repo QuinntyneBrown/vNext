@@ -116,7 +116,7 @@ namespace vNext.API
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseBlockingDetection();
+            //app.UseBlockingDetection();
 
             if (Configuration.GetValue<bool>("isTest"))
                 app.UseMiddleware<AutoAuthenticationMiddleware>();

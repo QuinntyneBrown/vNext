@@ -15,10 +15,11 @@ namespace IntegrationTests.Features
         {
             using (var server = CreateServer())
             {
+                var addressId = 9;
                 var response = await server.CreateClient()
-                    .GetAsync<GetAddressByIdQuery.Response>(Get.AddressById(72));
+                    .GetAsync<GetAddressByIdQuery.Response>(Get.AddressById(addressId));
 
-                Assert.True(response.Address.AddressId == 72);
+                Assert.True(response.Address.AddressId == addressId);
             }
         }
 
@@ -35,7 +36,7 @@ namespace IntegrationTests.Features
                             City = "Toronto",
                             PostalZipCode = "N1M 1M1",
                             County = "Canda",
-                            CountrySubDivisionId = 1,
+                            CountrySubdivisionId = 1,
                             Phone = "4161551234",
                             Fax = "4161116222",
                             Email = "noreply6@comsenseinc.com",
@@ -75,7 +76,7 @@ namespace IntegrationTests.Features
                             City = "",
                             PostalZipCode = "",
                             County = "",
-                            CountrySubDivisionId = 1,
+                            CountrySubdivisionId = 1,
                             Phone = "",
                             Fax = "",
                             Email = "",

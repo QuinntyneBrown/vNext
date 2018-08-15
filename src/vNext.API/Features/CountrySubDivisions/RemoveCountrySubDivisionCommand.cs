@@ -5,13 +5,13 @@ using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
-namespace vNext.API.Features.CountrySubDivisions
+namespace vNext.API.Features.CountrySubdivisions
 {
-    public class RemoveCountrySubDivisionCommand
+    public class RemoveCountrySubdivisionCommand
     {
         public class Request : AuthenticatedRequest, IRequest
         {
-            public CountrySubDivisionDto CountrySubDivision { get; set; }
+            public CountrySubdivisionDto CountrySubdivision { get; set; }
         }
 
         public class Handler : IRequestHandler<Request>
@@ -26,7 +26,7 @@ namespace vNext.API.Features.CountrySubDivisions
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    await connection.ExecuteProcAsync("[Comsense].[ProcCountrySubDivisionDelete]", new { request.CountrySubDivision.CountrySubDivisionId });
+                    await connection.ExecuteProcAsync("[Comsense].[ProcCountrySubdivisionDelete]", new { request.CountrySubdivision.CountrySubdivisionId });
                 }
             }
 

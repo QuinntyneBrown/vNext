@@ -4,17 +4,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
+import { DivisionPageComponent } from './division-page.component';
+import { DivisionsPageComponent } from './divisions-page.component';
+import { CreateDivisionOverlayComponent } from './create-division-overlay.component';
+import { CreateDivisionOverlay } from './create-division-overlay';
+import { DivisionService } from './division.service';
 
 const declarations = [
-
+  DivisionPageComponent,
+  DivisionsPageComponent,
+  CreateDivisionOverlayComponent
 ];
 
 const entryComponents = [
-
+  CreateDivisionOverlayComponent
 ];
 
 const providers = [
-
+  CreateDivisionOverlay,
+  DivisionService
 ];
 
 @NgModule({

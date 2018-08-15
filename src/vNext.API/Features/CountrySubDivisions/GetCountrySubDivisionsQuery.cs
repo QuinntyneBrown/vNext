@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
-namespace vNext.API.Features.CountrySubDivisions
+namespace vNext.API.Features.CountrySubdivisions
 {
-    public class GetCountrySubDivisionsQuery
+    public class GetCountrySubdivisionsQuery
     {
         public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {
-            public IEnumerable<CountrySubDivisionDto> CountrySubDivisions { get; set; }
+            public IEnumerable<CountrySubdivisionDto> CountrySubdivisions { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -32,7 +32,7 @@ namespace vNext.API.Features.CountrySubDivisions
                 {
                     return new Response()
                     {
-                        CountrySubDivisions = await connection.QueryProcAsync<CountrySubDivisionDto>("[Comsense].[ProcCountrySubDivisionGetAll]")
+                        CountrySubdivisions = await connection.QueryProcAsync<CountrySubdivisionDto>("[Comsense].[ProcCountrySubdivisionGetAll]")
                     };
                 }
             }

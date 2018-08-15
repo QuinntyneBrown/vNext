@@ -1,4 +1,4 @@
 export class Division {
-  public divisionId: string;
+  public divisionId: number;
   public name: string;
 }

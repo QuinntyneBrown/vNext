@@ -21,6 +21,7 @@ import { ContactsModule } from './contacts/contacts.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { RegionsModule } from './regions/regions.module';
 import { TerritoriesModule } from './territories/territories.module';
+import { DivisionsModule } from './divisions/divisions.module';
 
 
 @NgModule({
@@ -35,19 +36,20 @@ import { TerritoriesModule } from './territories/territories.module';
     BrowserAnimationsModule,
     CommonModule,
     AppRoutingModule,
-    CoreModule,
-    SharedModule,
-    UsersModule,
-    WarehousesModule,
-
+    
     AddressesModule,
     ContactsModule,
-    TilesModule,
+    CoreModule,
     DashboardsModule,
     DashboardTilesModule,
     DashboardTilesManagementModule,
+    DivisionsModule,    
     RegionsModule,
-    TerritoriesModule
+    SharedModule,
+    TerritoriesModule,
+    TilesModule,
+    UsersModule,
+    WarehousesModule
   ],
   providers: [
     { provide: baseUrl, useValue: 'http://localhost:8853/' }

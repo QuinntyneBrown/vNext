@@ -44,10 +44,9 @@ export class AddressEditorComponent {
   @Input("address")
   public set address(value: Address) {
     this._address = value;
-    console.log(this._address);
 
     this.form.patchValue({
-      address: this._address.addressStreet,
+      address: this._address.address,
       city: this._address.city,
       postalZipCode: this._address.postalZipCode,
       county: this._address.county,
@@ -64,10 +63,10 @@ export class AddressEditorComponent {
   public get address() { return this._address; }
   
   public form = new FormGroup({
-    address: new FormControl(this._address.addressStreet, [Validators.required, Validators.maxLength(256)]),
-    city: new FormControl(this._address.city, [Validators.required, Validators.maxLength(50)]),
-    postalZipCode: new FormControl(this._address.postalZipCode, [Validators.required, Validators.maxLength(20)]),
-    county: new FormControl(this._address.county, [Validators.required, Validators.maxLength(50)]),
+    address: new FormControl(this._address.address, [Validators.maxLength(256)]),
+    city: new FormControl(this._address.city, [Validators.maxLength(50)]),
+    postalZipCode: new FormControl(this._address.postalZipCode, [Validators.maxLength(20)]),
+    county: new FormControl(this._address.county, [Validators.maxLength(50)]),
     countrySubdivisionId: new FormControl(this._address.countrySubdivisionId, [Validators.required]),
     countryId: new FormControl(this._address.countryId, [Validators.required]),
 
@@ -80,7 +79,7 @@ export class AddressEditorComponent {
   public tryToSave() {
     let address = new Address();
   
-    address.addressStreet = this.form.value.address;
+    address.address = this.form.value.address;
     address.city = this.form.value.city;
     address.postalZipCode = this.form.value.postalZipCode;
     address.county = this.form.value.county;

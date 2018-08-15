@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 import { Subject, Observable } from "rxjs";
 import { ContactService } from "./contact.service";
 import { Contact } from "./contact.model";
+import { IgxColumnComponent } from "igniteui-angular";
+import { Router } from "@angular/router";
 
 @Component({
   templateUrl: "./contacts-page.component.html",
@@ -10,7 +12,8 @@ import { Contact } from "./contact.model";
 })
 export class ContactsPageComponent { 
   constructor(
-    private _contactService: ContactService
+    private _contactService: ContactService,
+    private _router: Router
   ) {
 
   }
@@ -21,14 +24,15 @@ export class ContactsPageComponent {
 
   public onDestroy: Subject<void> = new Subject<void>();
 
-  public columns: { field: string, header: string }[] = [
+  public columns: { field: string, header: string, pinned?: string }[] = [
     {
       field: "contactId",
       header: "Id"
     },
     {
       field: "firstName",
-      header: "First Name"
+      header: "First Name",
+      pinned: "true"
     },
     {
       field: "middleName",
@@ -46,6 +50,14 @@ export class ContactsPageComponent {
 
   ngOnDestroy() {
     this.onDestroy.next();	
+  }
+
+  handleCreateClick() {
+    this._router.navigateByUrl("/contact/create");
+  }
+
+  onCellClick($event) {
+    this._router.navigateByUrl(`/contact/edit/${$event.cell.row.rowData.contactId}`);
   }
 
   public contacts$: Observable<Contact[]>;

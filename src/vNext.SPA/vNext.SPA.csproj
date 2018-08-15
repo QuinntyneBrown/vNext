@@ -24,10 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\core\debounce.ts" />
     <None Remove="ClientApp\src\app\dashboard-tiles-management\add-dashboard-tile-overlay.ts" />
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\core\debounce.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\dashboard-tiles-management\add-dashboard-tile-overlay.ts" />
   </ItemGroup>
 

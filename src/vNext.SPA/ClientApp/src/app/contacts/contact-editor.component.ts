@@ -62,14 +62,15 @@ export class ContactEditorComponent {
 
   @Input("contact")
   public set contact(value: Contact) {
+    console.log(value);
     if (value.address)
       this.address = value.address;
 
     this.form.patchValue({
       contactId: value.contactId,
       addressId: value.addressId,
-      firstname: value.firstName,
-      lastname: value.lastName,
+      firstName: value.firstName,
+      lastName: value.lastName,
       companyName: value.companyName,
       middleName: value.middleName
     });

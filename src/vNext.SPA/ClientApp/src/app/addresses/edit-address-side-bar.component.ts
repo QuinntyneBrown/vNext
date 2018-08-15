@@ -31,7 +31,7 @@ export class EditAddressSideBarComponent {
           })
         )
         .subscribe();
-    }
+    }    
   }
 
   public onDestroy: Subject<void> = new Subject<void>();

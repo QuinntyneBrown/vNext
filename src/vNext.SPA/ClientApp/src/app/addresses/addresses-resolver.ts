@@ -26,7 +26,12 @@ export class AddressesResolver implements Resolve<boolean> {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const addressEmailTypes$ = this._addressEmailTypeService.get().pipe(map(x => this._addressStore.addressEmailTypes$.next(x)));
     const addressPhoneTypes$ = this._addressPhoneTypeService.get().pipe(map(x => this._addressStore.addressPhoneTypes$.next(x)));
-    const countrySubDivision$ = this._countrySubDivisionService.get().pipe(map(x => this._addressStore.countrySubdivisions$.next(x)));
+    const countrySubDivision$ = this._countrySubDivisionService.get()
+      .pipe(
+        map(x => {
+          this._addressStore.countrySubdivisions$.next(x);
+        })
+      );
     const countries$ = this._countryService.get().pipe(map(x => this._addressStore.countries$.next(x)));
 
     return combineLatest([addressEmailTypes$, addressPhoneTypes$, countrySubDivision$, countries$])

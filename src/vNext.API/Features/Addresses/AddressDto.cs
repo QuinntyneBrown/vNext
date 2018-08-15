@@ -13,7 +13,7 @@ namespace vNext.API.Features.Addresses
         public string City { get; set; }
         public string PostalZipCode { get; set; }
         public string County { get; set; }
-        public int CountrySubDivisionId { get; set; }
+        public int CountrySubdivisionId { get; set; }
         public string Email { get; set; }
         public string Fax { get; set; }        
         public string Phone { get; set; }
@@ -31,7 +31,7 @@ namespace vNext.API.Features.Addresses
                 Phone = address.Phone,
                 Website = address.Website,
                 County = address.County,
-                CountrySubDivisionId = address.CountrySubDivisionId,
+                CountrySubdivisionId = address.CountrySubdivisionId,
                 AddressEmails = address.AddressEmails.Select(x => AddressEmailDto.FromAddressEmail(x)).ToList(),
                 AddressPhones = address.AddressPhones.Select(x => AddressPhoneDto.FromAddressPhone(x)).ToList()
             };

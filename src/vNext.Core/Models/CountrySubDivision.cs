@@ -1,8 +1,8 @@
 namespace vNext.Core.Models
 {
-    public class CountrySubDivision
+    public class CountrySubdivision
     {
-        public int CountrySubDivisionId { get; set; }           
+        public int CountrySubdivisionId { get; set; }           
 		public string Code { get; set; }      
         public int CountryId { get; set; }
         public string Description { get; set; }

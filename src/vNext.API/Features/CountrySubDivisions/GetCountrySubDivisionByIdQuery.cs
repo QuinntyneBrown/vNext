@@ -7,18 +7,18 @@ using System.Data;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
-namespace vNext.API.Features.CountrySubDivisions
+namespace vNext.API.Features.CountrySubdivisions
 {
-    public class GetCountrySubDivisionByIdQuery
+    public class GetCountrySubdivisionByIdQuery
     {
         public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
         {
-            public int CountrySubDivisionId { get; set; }
+            public int CountrySubdivisionId { get; set; }
         }
 
         public class Response
         {
-            public CountrySubDivisionDto CountrySubDivision { get; set; }
+            public CountrySubdivisionDto CountrySubdivision { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -35,7 +35,7 @@ namespace vNext.API.Features.CountrySubDivisions
                 {
                     return new Response()
                     {
-                        CountrySubDivision = await connection.QuerySingleProcAsync<CountrySubDivisionDto>("[Comsense].[ProcCountrySubDivisionGet]", new { request.CountrySubDivisionId })
+                        CountrySubdivision = await connection.QuerySingleProcAsync<CountrySubdivisionDto>("[Comsense].[ProcCountrySubdivisionGet]", new { request.CountrySubdivisionId })
                     };
                 }
             }

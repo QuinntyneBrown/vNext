@@ -1,11 +1,11 @@
-using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Data;
 using Dapper;
-using vNext.Infrastructure.Data;
-using vNext.Core.Interfaces; using vNext.Core.Extensions;
 using FluentValidation;
+using MediatR;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Extensions;
+using vNext.Core.Interfaces;
 
 namespace vNext.CompanyService.CompanyAddresses
 {

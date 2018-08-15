@@ -2,11 +2,13 @@
   Contacts
 </cs-title-bar>
 
-<button mat-button>
+<button mat-button (click)="handleCreateClick()">
   Create Contact
 </button>
 
 <cs-grid [data]="contacts$ | async"
-         [columns]="columns">
+         [columns]="columns"
+         (cellClick)="onCellClick($event)"
+         >
 
 </cs-grid>

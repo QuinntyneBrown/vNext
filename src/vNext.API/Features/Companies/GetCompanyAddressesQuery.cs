@@ -1,10 +1,9 @@
-using vNext.Infrastructure.Data;
-using Dapper;
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
-using vNext.Core.Interfaces; using vNext.Core.Extensions;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Extensions;
+using vNext.Core.Interfaces;
 
 namespace vNext.CompanyService.CompanyAddresses
 {

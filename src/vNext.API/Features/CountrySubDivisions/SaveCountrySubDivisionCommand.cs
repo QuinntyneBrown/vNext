@@ -8,25 +8,25 @@ using vNext.Core.Extensions;
 using FluentValidation;
 using vNext.Core.Interfaces;
 
-namespace vNext.API.Features.CountrySubDivisions
+namespace vNext.API.Features.CountrySubdivisions
 {
-    public class SaveCountrySubDivisionCommand
+    public class SaveCountrySubdivisionCommand
     {
 
         public class Validator: AbstractValidator<Request> {
             public Validator()
             {
-                RuleFor(request => request.CountrySubDivision.CountrySubDivisionId).NotNull();
+                RuleFor(request => request.CountrySubdivision.CountrySubdivisionId).NotNull();
             }
         }
 
         public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
-            public CountrySubDivisionDto CountrySubDivision { get; set; }
+            public CountrySubdivisionDto CountrySubdivision { get; set; }
         }
 
         public class Response
         {			
-            public int CountrySubDivisionId { get; set; }
+            public int CountrySubdivisionId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -45,19 +45,19 @@ namespace vNext.API.Features.CountrySubDivisions
 
                     dynamicParameters.AddDynamicParams(new
                     {
-                        request.CountrySubDivision.CountrySubDivisionId,
-                        request.CountrySubDivision.Code
+                        request.CountrySubdivision.CountrySubdivisionId,
+                        request.CountrySubdivision.Code
                     });
 
-                    var parameterDirection = request.CountrySubDivision.CountrySubDivisionId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
+                    var parameterDirection = request.CountrySubdivision.CountrySubdivisionId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
 
-                    dynamicParameters.Add("CountrySubDivisionId",  request.CountrySubDivision.CountrySubDivisionId, DbType.Int16, parameterDirection);
+                    dynamicParameters.Add("CountrySubdivisionId",  request.CountrySubdivision.CountrySubdivisionId, DbType.Int16, parameterDirection);
                         
-                    await connection.ExecuteProcAsync("[Comsense].[ProcCountrySubDivisionSave]", dynamicParameters);
+                    await connection.ExecuteProcAsync("[Comsense].[ProcCountrySubdivisionSave]", dynamicParameters);
                     
                     return new Response()
                     {
-                        CountrySubDivisionId = dynamicParameters.Get<short>("@CountrySubDivisionId")
+                        CountrySubdivisionId = dynamicParameters.Get<short>("@CountrySubdivisionId")
                     };
                 }
             }

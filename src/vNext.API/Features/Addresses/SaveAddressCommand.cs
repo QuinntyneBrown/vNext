@@ -18,12 +18,7 @@ namespace vNext.API.Features.Addresses
         public class Validator: AbstractValidator<Request> {
             public Validator()
             {
-                RuleFor(request => request.Address.AddressId).NotNull();
-                RuleFor(request => request.Address.Address).NotNull();
-                RuleFor(request => request.Address.City).NotNull();
-                RuleFor(request => request.Address.PostalZipCode).NotNull();
-                RuleFor(request => request.Address.Phone).NotNull();
-                RuleFor(request => request.Address.Fax).NotNull();
+
             }
         }
 
@@ -66,7 +61,7 @@ namespace vNext.API.Features.Addresses
                     request.Address.City,
                     request.Address.PostalZipCode,
                     request.Address.County,
-                    request.Address.CountrySubDivisionId,
+                    request.Address.CountrySubdivisionId,
                     request.Address.Phone,
                     request.Address.Fax,
                     request.Address.Email,
