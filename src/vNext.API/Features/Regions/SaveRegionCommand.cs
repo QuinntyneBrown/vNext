@@ -5,6 +5,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.API.Features.Notes;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -20,7 +21,7 @@ namespace vNext.API.Features.Regions
             }
         }
 
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public RegionDto Region { get; set; }
         }
 
@@ -65,7 +66,7 @@ namespace vNext.API.Features.Regions
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
@@ -89,7 +90,7 @@ namespace vNext.API.Features.Regions
                 if (request.Region.RegionId == default(int))
                     dynamicParameters.AddDynamicParams(new
                     {
-                        CreatedByUserId = request.UserId,
+                        CreatedByUserId = request.CurrentUserId,
                         CreatedDateTime = request.CurrentDateTime
                     });
 

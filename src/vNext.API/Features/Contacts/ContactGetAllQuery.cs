@@ -41,7 +41,7 @@ namespace vNext.API.Features.Contacts
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
             {

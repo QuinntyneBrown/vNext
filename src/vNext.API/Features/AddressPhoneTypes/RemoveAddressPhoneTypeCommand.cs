@@ -27,7 +27,6 @@ namespace vNext.API.Features.AddressPhoneTypes
                     await connection.ExecuteProcAsync("[Comsense].[ProcAddressPhoneTypeDelete]", new { request.AddressPhoneType.AddressPhoneTypeId });
                 }
             }
-
         }
     }
 }

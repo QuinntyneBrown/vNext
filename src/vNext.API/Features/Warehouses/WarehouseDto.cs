@@ -1,6 +1,5 @@
 using System;
 using vNext.API.Features.Notes;
-using vNext.Core.Models;
 
 namespace vNext.API.Features.Warehouses
 {

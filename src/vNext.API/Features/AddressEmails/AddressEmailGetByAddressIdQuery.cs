@@ -1,20 +1,23 @@
 using MediatR;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
-namespace vNext.API.Features.Concurrencies
+namespace vNext.API.Features.AddressEmails
 {
-    public class ConcurrencyGetIdQuery
+    public class AddressEmailGetByAddressIdQuery
     {
-        public class Request : AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> {
+            public int AddressId { get; set; }
+        }
 
         public class Response
         {
-            public IEnumerable<ConcurrencyDto> Concurrencies { get; set; }
+            public IEnumerable<AddressEmailDto> AddressEmails { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
@@ -29,9 +32,19 @@ namespace vNext.API.Features.Concurrencies
                 {
                     return new Response()
                     {
-                        Concurrencies = await connection.QueryProcAsync<ConcurrencyDto>("[Comsense].[ProcConcurrencyGetId]")
+                        AddressEmails = await Procedure.ExecuteAsync(request, connection)
                     };
                 }
+            }
+        }
+
+        public static class Procedure
+        {
+            public static async Task<IEnumerable<AddressEmailDto>> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                return await connection.QueryProcAsync<AddressEmailDto>("[Comsense].[ProcAddressEmailGetByAddressId]", new {
+                    request.AddressId
+                });
             }
         }
     }

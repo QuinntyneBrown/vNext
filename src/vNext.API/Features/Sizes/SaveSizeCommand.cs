@@ -46,7 +46,7 @@ namespace vNext.API.Features.Sizes
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

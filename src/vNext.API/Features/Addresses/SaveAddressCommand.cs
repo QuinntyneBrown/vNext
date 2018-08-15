@@ -48,7 +48,7 @@ namespace vNext.API.Features.Addresses
             }
         }
 
-        public static class Procedure {
+        public class Procedure {
 
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

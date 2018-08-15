@@ -1,9 +1,8 @@
-using vNext.Core.Interfaces;
-using Dapper;
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -11,7 +10,7 @@ namespace vNext.API.Features.AddressPhones
 {
     public class GetAddressPhonesQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {

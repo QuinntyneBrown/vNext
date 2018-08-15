@@ -38,7 +38,7 @@ namespace vNext.API.Features.Statuses
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {

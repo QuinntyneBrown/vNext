@@ -35,7 +35,7 @@ namespace vNext.API.Features.Tiles
                 }
             }
 
-            public static class Procedure
+            public class Procedure
             {
                 public static async Task<IEnumerable<TileDto>> ExecuteAsync(Request request, IDbConnection connection)
                 {

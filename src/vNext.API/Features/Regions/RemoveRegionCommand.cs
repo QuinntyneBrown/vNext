@@ -45,7 +45,7 @@ namespace vNext.API.Features.Regions
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

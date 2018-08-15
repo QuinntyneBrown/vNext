@@ -37,7 +37,7 @@ namespace vNext.API.Features.ShipTos
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<QueryProjectionDto> ExecuteAsync(Request request, IDbConnection connection)
             {

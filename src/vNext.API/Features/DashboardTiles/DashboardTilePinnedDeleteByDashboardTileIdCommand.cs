@@ -2,10 +2,8 @@ using Dapper;
 using FluentValidation;
 using MediatR;
 using System.Data;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -40,25 +38,21 @@ namespace vNext.API.Features.DashboardTiles
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+
+                var result = default(int);
+
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var result = default(int);
+                    connection.Open();
 
-                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
-                    {
-                        connection.Open();
-
-                        result = await Procedure.ExecuteAsync(request, connection);
-                    }
-
-                    transaction.Complete();
-
-                    return new Response(result);
+                    result = await Procedure.ExecuteAsync(request, connection);
                 }
+
+                return new Response(result);
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {

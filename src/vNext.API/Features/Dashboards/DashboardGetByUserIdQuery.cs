@@ -42,7 +42,7 @@ namespace vNext.API.Features.Dashboards
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
             {

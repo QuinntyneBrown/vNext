@@ -2,7 +2,7 @@ using MediatR;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -10,7 +10,7 @@ namespace vNext.API.Features.Concurrencies
 {
     public class ConcurrencyTruncateCommand
     {        
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response { }
 
@@ -22,25 +22,20 @@ namespace vNext.API.Features.Concurrencies
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
-                    {
-                        connection.Open();
+                    connection.Open();
 
-                        await new Procedure().ExecuteAsync(request, connection);
-                    }
-
-                    transaction.Complete();
-
-                    return new Response();
+                    await Procedure.ExecuteAsync(request, connection);
                 }
+
+                return new Response();
             }
         }
 
         public class Procedure
         {
-            public async Task<int> ExecuteAsync(Request request, IDbConnection connection)
+            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
                 => await connection.ExecuteProcAsync("[Comsense].[ProcConcurrencyTruncate]");
         }
     }

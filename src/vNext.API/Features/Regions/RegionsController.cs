@@ -12,8 +12,8 @@ namespace vNext.API.Features.Regions
     [Route("api/regions")]
     public class RegionsController: BaseController
     {
-        public RegionsController(IDateTime dateTime, IHttpContextAccessor httpContextAccessor, IMediator mediator)
-            : base(dateTime,"Region",httpContextAccessor,mediator) { }
+        public RegionsController(IMediator mediator)
+            : base("Region",mediator) { }
 
         [HttpPost]
         public ActionResult<SaveRegionCommand.Response> Add(SaveRegionCommand.Request request)

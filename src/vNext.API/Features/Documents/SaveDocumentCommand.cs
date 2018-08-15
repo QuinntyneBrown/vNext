@@ -2,10 +2,8 @@ using Dapper;
 using FluentValidation;
 using MediatR;
 using System.Data;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
@@ -42,27 +40,24 @@ namespace vNext.API.Features.Documents
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+
+                var result = default(short);
+
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var result = default(short);
+                    connection.Open();
 
-                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
-                    {
-                        connection.Open();
-
-                        result = await new Procedure().ExecuteAsync(request, connection);
-                    }
-
-                    transaction.Complete();
-
-                    return new Response(result);
+                    result = await Procedure.ExecuteAsync(request, connection);
                 }
+
+                return new Response(result);
+
             }
         }
 
         public class Procedure
         {
-            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

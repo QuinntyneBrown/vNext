@@ -1,15 +1,16 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
-using vNext.Core.Models;
 
 namespace vNext.API.Features.Notes
 {
     public class GetNoteByIdQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int NoteId { get; set; }
         }
@@ -28,14 +29,19 @@ namespace vNext.API.Features.Notes
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
-                {
-                    var note = await connection.QuerySingleProcAsync<Core.Models.Note>("[Comsense].[ProcNoteGet]", new { request.NoteId });
-
+                {                    
                     return new Response()
                     {
-                        Note = NoteDto.FromNote(note)
+                        Note = await Procedure.ExecuteAsync(request,connection)
                     };
                 }
+            }
+        }
+
+        public class Procedure {
+            public static async Task<NoteDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                return await connection.QuerySingleProcAsync<NoteDto>("[Comsense].[ProcNoteGet]", new { request.NoteId });
             }
         }
     }

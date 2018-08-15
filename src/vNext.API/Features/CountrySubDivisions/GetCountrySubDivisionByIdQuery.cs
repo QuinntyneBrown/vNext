@@ -1,6 +1,7 @@
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -8,7 +9,7 @@ namespace vNext.API.Features.CountrySubdivisions
 {
     public class GetCountrySubdivisionByIdQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int CountrySubdivisionId { get; set; }
         }

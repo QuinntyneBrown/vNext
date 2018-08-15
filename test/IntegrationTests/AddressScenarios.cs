@@ -15,7 +15,7 @@ namespace IntegrationTests.Features
         {
             using (var server = CreateServer())
             {
-                var addressId = 9;
+                var addressId = 72;
                 var response = await server.CreateClient()
                     .GetAsync<GetAddressByIdQuery.Response>(Get.AddressById(addressId));
 

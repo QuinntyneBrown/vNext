@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 using vNext.Core.Models;
@@ -11,7 +12,7 @@ namespace vNext.API.Features.Countries
 {
     public class GetCountriesQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> { }
+        public class Request : AuthenticatedRequest, IRequest<Response> { }
 
         public class Response
         {

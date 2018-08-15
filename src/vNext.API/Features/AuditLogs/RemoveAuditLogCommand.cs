@@ -2,6 +2,7 @@ using MediatR;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -9,7 +10,7 @@ namespace vNext.API.Features.AuditLogs
 {
     public class RemoveAuditLogCommand
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int AuditLogId { get; set; }
         }
@@ -37,7 +38,7 @@ namespace vNext.API.Features.AuditLogs
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {

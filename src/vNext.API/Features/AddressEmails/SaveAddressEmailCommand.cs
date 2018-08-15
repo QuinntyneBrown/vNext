@@ -20,7 +20,7 @@ namespace vNext.API.Features.AddressEmails
             }
         }
 
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public AddressEmailDto AddressEmail { get; set; }
         }
 

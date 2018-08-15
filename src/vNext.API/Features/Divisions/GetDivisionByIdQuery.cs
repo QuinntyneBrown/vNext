@@ -37,7 +37,7 @@ namespace vNext.API.Features.Divisions
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<QueryProjectionDto> ExecuteAsync(Request request, IDbConnection connection)
             {

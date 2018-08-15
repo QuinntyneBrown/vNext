@@ -41,7 +41,7 @@ namespace vNext.API.Features.Users
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
@@ -67,7 +67,7 @@ namespace vNext.API.Features.Users
                     dynamicParameters.AddDynamicParams(new
                     {
                         request.CurrentDateTime,
-                        request.UserId
+                        request.CurrentUserId
                     });
                 
                 var parameterDirection = request.User.UserId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;

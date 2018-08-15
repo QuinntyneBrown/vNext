@@ -1,8 +1,6 @@
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Contacts
 {
@@ -10,8 +8,8 @@ namespace vNext.API.Features.Contacts
     [Route("api/contacts")]
     public class ContactsController: BaseController
     {        
-        public ContactsController(IDateTime dateTime, IHttpContextAccessor httpContextAccessor, IMediator mediator)
-            : base(dateTime, "Contact", httpContextAccessor, mediator) { }
+        public ContactsController(IMediator mediator)
+            : base("Contact", mediator) { }
 
         [HttpPost]
         public async Task<ActionResult<SaveContactCommand.Response>> Add(SaveContactCommand.Request request)

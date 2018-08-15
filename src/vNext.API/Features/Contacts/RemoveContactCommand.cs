@@ -3,6 +3,7 @@ using System;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -10,7 +11,7 @@ namespace vNext.API.Features.Contacts
 {
     public class RemoveContactCommand
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int ContactId { get; set; }
             public int ConcurrencyVersion { get; set; }
@@ -48,7 +49,7 @@ namespace vNext.API.Features.Contacts
 
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

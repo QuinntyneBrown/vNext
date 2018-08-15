@@ -10,8 +10,8 @@ namespace vNext.API.Features.AuditLogs
     [Route("api/auditLogs")]
     public class AuditLogsController: BaseController
     {
-        public AuditLogsController(IDateTime dateTime, IHttpContextAccessor httpContextAccessor, IMediator mediator) 
-            : base(dateTime,"AuditLog",httpContextAccessor, mediator) { }
+        public AuditLogsController( IMediator mediator) 
+            : base("AuditLog",mediator) { }
 
         [HttpPost]
         public ActionResult<SaveAuditLogCommand.Response> Add(SaveAuditLogCommand.Request request)

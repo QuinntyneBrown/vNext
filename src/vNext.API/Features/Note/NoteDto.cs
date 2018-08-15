@@ -4,7 +4,7 @@ namespace vNext.API.Features.Notes
     {        
         public int NoteId { get; set; }
         public string Note { get; set; }
-        public static NoteDto FromNote(vNext.Core.Models.Note note)
+        public static NoteDto FromNote(dynamic note)
             => new NoteDto
             {
                 NoteId = note.NoteId,

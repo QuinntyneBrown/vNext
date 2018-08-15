@@ -36,7 +36,7 @@ namespace vNext.API.Features.Concurrencies
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<IEnumerable<ConcurrencyDto>> ExecuteAsync(Request request, IDbConnection connection)
             {

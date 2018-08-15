@@ -32,14 +32,14 @@ namespace vNext.API.Features.Notes
                 {
                     return new Response()
                     {
-                        NoteId = await new Procedure().ExecuteAsync(connection,request.Note)
+                        NoteId = await Procedure.ExecuteAsync(connection,request.Note)
                     };
                 }
             }
         }
 
         public class Procedure {
-            public async Task<int> ExecuteAsync(IDbConnection connection, string note)
+            public static async Task<int> ExecuteAsync(IDbConnection connection, string note)
             {
                 var dynamicParameters = new DynamicParameters();
 

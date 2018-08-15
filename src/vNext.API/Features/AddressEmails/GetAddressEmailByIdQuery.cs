@@ -38,7 +38,7 @@ namespace vNext.API.Features.AddressEmails
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<AddressEmailDto> ExecuteAsync(Request request, IDbConnection connection)
             {

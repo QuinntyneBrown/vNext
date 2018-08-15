@@ -2,9 +2,9 @@ using Dapper;
 using FluentValidation;
 using MediatR;
 using System.Data;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -19,7 +19,7 @@ namespace vNext.API.Features.AuditLogs
             }
         }
 
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public AuditLogDto AuditLog { get; set; }
         }
 
@@ -46,7 +46,7 @@ namespace vNext.API.Features.AuditLogs
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

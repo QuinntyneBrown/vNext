@@ -1,11 +1,11 @@
-using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Data;
 using Dapper;
-using vNext.Core.Interfaces;
-using vNext.Core.Extensions;
 using FluentValidation;
+using MediatR;
+using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Common;
+using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
 namespace vNext.ContactService.ContactAddresses
@@ -20,7 +20,7 @@ namespace vNext.ContactService.ContactAddresses
             }
         }
 
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public ContactAddressDto ContactAddress { get; set; }
         }
 

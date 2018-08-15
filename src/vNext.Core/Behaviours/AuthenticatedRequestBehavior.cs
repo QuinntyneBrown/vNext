@@ -22,14 +22,14 @@ namespace vNext.Core.Behaviours
         
         public Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var context = _httpContextAccessor.HttpContext;
+            var claims = _httpContextAccessor.HttpContext.User.Claims;
 
             switch(request)
             {
                 case IAuthenticatedRequest authenticatedRequest:
-                    authenticatedRequest.UserId = Convert.ToInt32(context.User.Claims.Single(x => x.Type == "UserId").Value);
+                    authenticatedRequest.CurrentUserId = Convert.ToInt32(claims.Single(x => x.Type == "UserId").Value);
                     authenticatedRequest.CurrentDateTime = _dateTime.UtcNow;
-                    authenticatedRequest.CustomerKey = $"{context.User.Claims.Single(x => x.Type == "CustomerKey").Value}";
+                    authenticatedRequest.CustomerKey = $"{claims.Single(x => x.Type == "CustomerKey").Value}";
                     break;
             }
 

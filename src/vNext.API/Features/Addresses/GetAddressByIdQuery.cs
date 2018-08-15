@@ -1,18 +1,18 @@
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
-using vNext.Core.Models;
-using vNext.Core.Interfaces;
-using vNext.Core.Extensions;
-using System.Linq;
-using vNext.Core.Interfaces;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.API.Features.AddressEmails;
+using vNext.API.Features.AddressPhones;
+using vNext.Core.Common;
+using vNext.Core.Extensions;
+using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Addresses
 {
     public class GetAddressByIdQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int AddressId { get; set; }
         }
@@ -33,26 +33,25 @@ namespace vNext.API.Features.Addresses
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
                     return new Response() {
-                        Address = AddressDto.FromAddress(await Procedure.ExecuteAsync(request, connection))
+                        Address = await Procedure.ExecuteAsync(request, connection)
                     };
                 }
             }           
         }
-
-
-        public static class Procedure
+        
+        public class Procedure
         {
-            public static async Task<Address> ExecuteAsync(Request request, IDbConnection connection)
+            public static async Task<AddressDto> ExecuteAsync(Request request, IDbConnection connection)
             {
-                var address = await connection.QuerySingleProcAsync<Address>("[Comsense].[ProcAddressGet]", new { request.AddressId });
-                var addressBase = await connection.QuerySingleProcAsync<AddressBase>("[Comsense].[ProcAddressBaseGet]", new { AddressBaseId = request.AddressId });
+                var address = await connection.QuerySingleProcAsync<AddressDto>("[Comsense].[ProcAddressGet]", new { request.AddressId });
+                var addressBase = await connection.QuerySingleProcAsync<AddressDto>("[Comsense].[ProcAddressBaseGet]", new { address.AddressBaseId });
                 address.CountrySubdivisionId = addressBase.CountrySubdivisionId;
                 address.Address = addressBase.Address;
                 address.City = addressBase.City;
                 address.County = addressBase.County;
                 address.PostalZipCode = addressBase.PostalZipCode;
-                address.AddressPhones = (await connection.QueryProcAsync<AddressPhone>("[Comsense].[ProcAddressPhoneGetByAddressId]", new { request.AddressId })).ToList();
-                address.AddressEmails = (await connection.QueryProcAsync<AddressEmail>("[Comsense].[ProcAddressEmailGetByAddressId]", new { request.AddressId })).ToList();
+                address.AddressPhones = await AddressPhoneGetByAddressIdQuery.Procedure.ExecuteAsync(new AddressPhoneGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);                
+                address.AddressEmails = await AddressEmailGetByAddressIdQuery.Procedure.ExecuteAsync(new AddressEmailGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);
                 return address;
             }
         }

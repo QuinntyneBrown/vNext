@@ -9,6 +9,7 @@ namespace vNext.API.Features.Addresses
     public class AddressDto
     {
         public int AddressId { get; set; }
+        public int AddressBaseId { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
         public string PostalZipCode { get; set; }
@@ -18,8 +19,8 @@ namespace vNext.API.Features.Addresses
         public string Fax { get; set; }        
         public string Phone { get; set; }
         public string Website { get; set; }
-        public ICollection<AddressEmailDto> AddressEmails { get; set; } = new HashSet<AddressEmailDto>();
-        public ICollection<AddressPhoneDto> AddressPhones { get; set; } = new HashSet<AddressPhoneDto>();
+        public IEnumerable<AddressEmailDto> AddressEmails { get; set; } = new HashSet<AddressEmailDto>();
+        public IEnumerable<AddressPhoneDto> AddressPhones { get; set; } = new HashSet<AddressPhoneDto>();
 
         public static AddressDto FromAddress(Address address)
             => new AddressDto

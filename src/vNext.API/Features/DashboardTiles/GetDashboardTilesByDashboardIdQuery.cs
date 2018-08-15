@@ -51,7 +51,7 @@ namespace vNext.API.Features.DashboardTiles
             public int ConcurrencyVersion { get; set; }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<IEnumerable<QueryProjectionDto>> ExecuteAsync(Request request, IDbConnection connection)
                 => await connection.QueryProcAsync<QueryProjectionDto>("[Common].[ProcDashboardTileGetByDashboardId]", new { request.DashboardId });

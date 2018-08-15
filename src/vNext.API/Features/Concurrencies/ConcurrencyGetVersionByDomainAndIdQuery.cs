@@ -1,12 +1,9 @@
 using Dapper;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
 
@@ -14,7 +11,7 @@ namespace vNext.API.Features.Concurrencies
 {
     public class ConcurrencyGetVersionByDomainAndIdQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response> {
             public int Version { get; set; }
             public string Domain { get; set; }
             public int Id { get; set; }
@@ -34,25 +31,20 @@ namespace vNext.API.Features.Concurrencies
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                var result = default(short);
+
+                using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var result = default(short);
+                    connection.Open();
 
-                    using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
-                    {
-                        connection.Open();
-
-                        result = await Procedure.ExecuteAsync(request, connection);
-                    }
-
-                    transaction.Complete();
-
-                    return new Response(result);
+                    result = await Procedure.ExecuteAsync(request, connection);
                 }
+                
+                return new Response(result);
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {

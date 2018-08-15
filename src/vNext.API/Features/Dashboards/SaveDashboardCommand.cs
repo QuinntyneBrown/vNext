@@ -47,7 +47,7 @@ namespace vNext.API.Features.Dashboards
             }
         }
 
-        public static class Procedure
+        public class Procedure
         {
             public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
