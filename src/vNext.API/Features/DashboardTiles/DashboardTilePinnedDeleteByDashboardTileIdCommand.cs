@@ -33,7 +33,7 @@ namespace vNext.API.Features.DashboardTiles
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler( IDbConnectionManager dbConnectionManager)
+            public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;
             }
