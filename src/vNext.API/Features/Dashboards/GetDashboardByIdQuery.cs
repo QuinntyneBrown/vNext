@@ -1,11 +1,10 @@
 using MediatR;
-using System.Threading.Tasks;
-using System.Threading;
-using vNext.Core.Models;
-using vNext.Core.Interfaces;
-using vNext.Core.Extensions;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading;
+using System.Threading.Tasks;
+using vNext.Core.Extensions;
+using vNext.Core.Interfaces;
 
 namespace vNext.API.Features.Dashboards
 {
@@ -24,6 +23,8 @@ namespace vNext.API.Features.Dashboards
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, QueryProjectionDto> _procedure;
+
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

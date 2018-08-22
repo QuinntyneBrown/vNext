@@ -31,6 +31,7 @@ namespace vNext.API.Features.Statuses
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, short> _procedure;
             public Handler( IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

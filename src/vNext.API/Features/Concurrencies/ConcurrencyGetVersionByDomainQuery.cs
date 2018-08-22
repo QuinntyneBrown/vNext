@@ -21,6 +21,7 @@ namespace vNext.API.Features.Concurrencies
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, IEnumerable<ConcurrencyDto>> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

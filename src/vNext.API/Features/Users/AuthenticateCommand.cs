@@ -28,6 +28,7 @@ namespace vNext.API.Features.Users
         {
             private readonly ISecurityTokenFactory _securityTokenFactory;
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request,int> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager, ISecurityTokenFactory securityTokenFactory)
             {
                 _dbConnectionManager = dbConnectionManager;

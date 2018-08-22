@@ -22,6 +22,7 @@ namespace vNext.API.Features.Divisions
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, QueryProjectionDto> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

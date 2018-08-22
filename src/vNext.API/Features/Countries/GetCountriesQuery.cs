@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -22,6 +23,7 @@ namespace vNext.API.Features.Countries
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, IEnumerable<Country>> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;
@@ -37,6 +39,14 @@ namespace vNext.API.Features.Countries
                         .Select(x => CountryDto.FromCountry(x)).ToList()
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, Country>
+        {
+            public async Task<Country> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

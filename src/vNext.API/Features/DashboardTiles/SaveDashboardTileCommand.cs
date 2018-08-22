@@ -24,6 +24,7 @@ namespace vNext.API.Features.DashboardTiles
         {
 
             private readonly IDbConnectionManager _dbConnectionManager;
+
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

@@ -19,6 +19,7 @@ namespace vNext.API.Features.Dashboards
         public class Handler : IRequestHandler<Request>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, short> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;

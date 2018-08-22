@@ -24,6 +24,7 @@ namespace vNext.API.Features.AddressEmails
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IProcedure<Request, IEnumerable<AddressEmailDto>> _procedure;
+
             public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, IEnumerable<AddressEmailDto>> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;

@@ -35,6 +35,7 @@ namespace vNext.API.Features.Regions
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, short> _procedure;
             private readonly IMediator _mediator;
             public Handler(
                 IDbConnectionManager dbConnectionManager,

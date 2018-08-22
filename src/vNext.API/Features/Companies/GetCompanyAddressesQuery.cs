@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace vNext.CompanyService.CompanyAddresses
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
+            private readonly IProcedure<Request, IEnumerable<CompanyAddressDto>> _procedure;
             public Handler(IDbConnectionManager dbConnectionManager)
             {
                 _dbConnectionManager = dbConnectionManager;
@@ -34,6 +36,14 @@ namespace vNext.CompanyService.CompanyAddresses
                         CompanyAddresses = await connection.QueryProcAsync<CompanyAddressDto>("[Common].[ProcCompanyAddressGetAll]")
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, CompanyAddressDto>
+        {
+            public async Task<CompanyAddressDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

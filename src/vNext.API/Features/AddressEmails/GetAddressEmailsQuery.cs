@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,9 +21,12 @@ namespace vNext.API.Features.AddressEmails
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler(IDbConnectionManager dbConnectionManager)
+            private readonly IProcedure<Request, IEnumerable<AddressEmailDto>> _procedure;
+
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, IEnumerable<AddressEmailDto>> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -31,9 +35,17 @@ namespace vNext.API.Features.AddressEmails
                 {
                     return new Response()
                     {
-                        AddressEmails = await connection.QueryProcAsync<AddressEmailDto>("[Comsense].[ProcAddressEmailGetAll]")
+                        AddressEmails = await _procedure.ExecuteAsync(request, connection)
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, IEnumerable<AddressEmailDto>>
+        {
+            public async Task<IEnumerable<AddressEmailDto>> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                return await connection.QueryProcAsync<AddressEmailDto>("[Comsense].[ProcAddressEmailGetAll]");
             }
         }
     }

@@ -19,7 +19,7 @@ namespace vNext.API.Features.AddressEmails
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IProcedure<Request, int> _procedure;
-
+            
             public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, int> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
