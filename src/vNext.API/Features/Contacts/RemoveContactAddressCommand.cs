@@ -31,5 +31,13 @@ namespace vNext.ContactService.ContactAddresses
             }
 
         }
+
+        public class Procedure : IProcedure<Request, short>
+        {
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
 }

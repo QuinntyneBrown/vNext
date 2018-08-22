@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -39,6 +40,14 @@ namespace vNext.API.Features.DashboardTiles
                         DashboardTile = DashboardTileDto.FromDashboardTile(dashboardTile)
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, DashboardTile>
+        {
+            public async Task<DashboardTile> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

@@ -62,5 +62,13 @@ namespace vNext.API.Features.Countries
                 }
             }
         }
+
+        public class Procedure : IProcedure<Request, short>
+        {
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
 }

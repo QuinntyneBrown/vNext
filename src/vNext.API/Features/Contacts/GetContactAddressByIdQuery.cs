@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -36,6 +37,14 @@ namespace vNext.ContactService.ContactAddresses
                         ContactAddress = await connection.QuerySingleProcAsync<ContactAddressDto>("[Common].[ProcContactAddressGet]", new { request.ContactAddressId })
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, ContactAddressDto>
+        {
+            public async Task<ContactAddressDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

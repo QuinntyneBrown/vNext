@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -36,6 +37,14 @@ namespace vNext.API.Features.AddressEmailTypes
                         AddressEmailType = await connection.QuerySingleProcAsync<AddressEmailTypeDto>("[Comsense].[ProcAddressEmailTypeGet]", new { request.AddressEmailTypeId })
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, AddressEmailTypeDto>
+        {
+            public async Task<AddressEmailTypeDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

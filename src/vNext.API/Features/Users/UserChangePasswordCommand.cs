@@ -1,5 +1,6 @@
 using Dapper;
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -38,6 +39,14 @@ namespace vNext.API.Features.Users
                     
                     await connection.ExecuteProcAsync("[Common].[ProcUserChangePassword]", dynamicParameters);
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, short>
+        {
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -36,6 +37,14 @@ namespace vNext.API.Features.Countries
                         Country = await connection.QuerySingleProcAsync<CountryDto>("[Comsense].[ProcCountryGet]", new { request.CountryId })
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, CountryDto>
+        {
+            public async Task<CountryDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

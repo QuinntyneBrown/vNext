@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -36,6 +37,14 @@ namespace vNext.API.Features.AddressPhones
                         AddressPhone = await connection.QuerySingleProcAsync<AddressPhoneDto>("[Comsense].[ProcAddressPhoneGet]", new { request.AddressPhoneId })
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, AddressPhoneDto>
+        {
+            public async Task<AddressPhoneDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

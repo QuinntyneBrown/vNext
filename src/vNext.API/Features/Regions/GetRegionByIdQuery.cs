@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;
@@ -32,8 +33,16 @@ namespace vNext.API.Features.Regions
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                     return new Response()
                     {
-                        Region = RegionDto.FromRegion(await connection.QuerySingleProcAsync<dynamic>("[Common].[ProcRegionGet]", new { request.RegionId }))
+                        Region = RegionDto.FromRegion(await connection.QuerySingleProcAsync<RegionDto>("[Common].[ProcRegionGet]", new { request.RegionId }))
                     };
+            }
+        }
+
+        public class Procedure : IProcedure<Request, RegionDto>
+        {
+            public async Task<RegionDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

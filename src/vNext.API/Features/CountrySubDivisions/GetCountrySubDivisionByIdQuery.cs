@@ -1,4 +1,5 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -36,6 +37,14 @@ namespace vNext.API.Features.CountrySubdivisions
                         CountrySubdivision = await connection.QuerySingleProcAsync<CountrySubdivisionDto>("[Comsense].[ProcCountrySubdivisionGet]", new { request.CountrySubdivisionId })
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, CountrySubdivisionDto>
+        {
+            public async Task<CountrySubdivisionDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

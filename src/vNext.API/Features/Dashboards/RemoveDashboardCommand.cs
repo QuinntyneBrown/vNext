@@ -5,6 +5,7 @@ using MediatR;
 using System.Threading.Tasks;
 using System.Threading;
 using vNext.Core.Common;
+using System.Data;
 
 namespace vNext.API.Features.Dashboards
 {
@@ -37,6 +38,14 @@ namespace vNext.API.Features.Dashboards
 
                     await connection.ExecuteProcAsync("[Common].[ProcDashboardDelete]", new { request.Dashboard.DashboardId });
                 }                
+            }
+        }
+
+        public class Procedure : IProcedure<Request, Dashboard>
+        {
+            public async Task<Dashboard> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

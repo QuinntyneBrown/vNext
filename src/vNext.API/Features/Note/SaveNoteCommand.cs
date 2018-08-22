@@ -68,5 +68,13 @@ namespace vNext.API.Features.Notes
                 return dynamicParameters.Get<short>("@NoteId");
             }
         }
+
+        public class Procedure : IProcedure<Request, short>
+        {
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                throw new System.NotImplementedException();
+            }
+        }
     }
 }
