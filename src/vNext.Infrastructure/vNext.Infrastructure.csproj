@@ -13,8 +13,4 @@
     <ProjectReference Include="..\vNext.Core\vNext.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>

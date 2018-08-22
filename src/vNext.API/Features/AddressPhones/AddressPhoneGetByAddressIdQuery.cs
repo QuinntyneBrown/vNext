@@ -1,7 +1,6 @@
 using MediatR;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Common;
@@ -24,8 +23,12 @@ namespace vNext.API.Features.AddressPhones
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler(IDbConnectionManager dbConnectionManager)
-			    => _dbConnectionManager = dbConnectionManager;
+            private readonly IProcedure<Request, IEnumerable<AddressPhoneDto>> _procedure;
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, IEnumerable<AddressPhoneDto>> procedure)
+            {
+                _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -33,15 +36,15 @@ namespace vNext.API.Features.AddressPhones
                 {
                     return new Response()
                     {
-                        AddressPhones = await Procedure.ExecuteAsync(request, connection)
+                        AddressPhones = await _procedure.ExecuteAsync(request, connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request, IEnumerable<AddressPhoneDto>>
         {
-            public static async Task<IEnumerable<AddressPhoneDto>> ExecuteAsync(Request request, IDbConnection connection)
+            public async Task<IEnumerable<AddressPhoneDto>> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QueryProcAsync<AddressPhoneDto>("[Comsense].[ProcAddressPhoneGetByAddressId]", new {
                     request.AddressId

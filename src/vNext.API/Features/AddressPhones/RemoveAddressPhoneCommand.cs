@@ -18,7 +18,9 @@ namespace vNext.API.Features.AddressPhones
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             public Handler(IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            {
+                _dbConnectionManager = dbConnectionManager;
+            }
 
             public async Task Handle(Request request, CancellationToken cancellationToken)
             {

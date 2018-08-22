@@ -23,7 +23,9 @@ namespace vNext.API.Features.Customers
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             public Handler(IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            {
+                _dbConnectionManager = dbConnectionManager;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {

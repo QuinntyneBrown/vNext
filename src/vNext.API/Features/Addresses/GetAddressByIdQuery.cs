@@ -46,12 +46,15 @@ namespace vNext.API.Features.Addresses
         
         public class Procedure: IProcedure<Request,AddressDto>
         {
-            IProcedure<AddressEmailGetByAddressIdQuery.Request, IEnumerable<AddressEmailDto>> _procedure;
+            IProcedure<AddressEmailGetByAddressIdQuery.Request, IEnumerable<AddressEmailDto>> _addressEmailGetByAddressIdProcedure;
+            IProcedure<AddressPhoneGetByAddressIdQuery.Request, IEnumerable<AddressPhoneDto>> _addressPhoneGetByAddressIdProcedure;
             public Procedure(
-                IProcedure<AddressEmailGetByAddressIdQuery.Request,IEnumerable<AddressEmailDto>> procedure
+                IProcedure<AddressEmailGetByAddressIdQuery.Request, IEnumerable<AddressEmailDto>> addressEmailGetByAddressIdProcedure,
+                IProcedure<AddressPhoneGetByAddressIdQuery.Request, IEnumerable<AddressPhoneDto>> addressPhoneGetByAddressIdProcedure
                 )
             {
-                _procedure = procedure;
+                _addressEmailGetByAddressIdProcedure = addressEmailGetByAddressIdProcedure;
+                _addressPhoneGetByAddressIdProcedure = addressPhoneGetByAddressIdProcedure;
             }
 
             public async Task<AddressDto> ExecuteAsync(Request request, IDbConnection connection)
@@ -63,8 +66,8 @@ namespace vNext.API.Features.Addresses
                 address.City = addressBase.City;
                 address.County = addressBase.County;
                 address.PostalZipCode = addressBase.PostalZipCode;
-                address.AddressPhones = await AddressPhoneGetByAddressIdQuery.Procedure.ExecuteAsync(new AddressPhoneGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);                
-                address.AddressEmails = await _procedure.ExecuteAsync(new AddressEmailGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);
+                address.AddressPhones = await _addressPhoneGetByAddressIdProcedure.ExecuteAsync(new AddressPhoneGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);                
+                address.AddressEmails = await _addressEmailGetByAddressIdProcedure.ExecuteAsync(new AddressEmailGetByAddressIdQuery.Request() { AddressId = request.AddressId }, connection);
                 return address;
             }
         }
