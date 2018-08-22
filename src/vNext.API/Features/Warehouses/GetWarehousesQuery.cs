@@ -34,7 +34,7 @@ namespace vNext.API.Features.Warehouses
                     var result = await Procedure.ExecuteAsync(request, connection);
                     return new Response()
                     {
-                        Warehouses = result.Select(x => WarehouseDto.FromWarehouse(x))
+                        //Warehouses = result.Select(x => WarehouseDto.FromWarehouse(x))
                     };
                 }
             }

@@ -23,8 +23,15 @@ namespace vNext.API.Features.AddressEmails
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler(IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            private readonly IProcedure<Request, AddressEmailDto> _procedure;
+
+            public Handler(
+                IDbConnectionManager dbConnectionManager, 
+                IProcedure<Request, AddressEmailDto> procedure)
+            {
+                _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -32,15 +39,15 @@ namespace vNext.API.Features.AddressEmails
                 {
                     return new Response()
                     {
-                        AddressEmail = await Procedure.ExecuteAsync(request,connection)
+                        AddressEmail = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request,AddressEmailDto>
         {
-            public static async Task<AddressEmailDto> ExecuteAsync(Request request, IDbConnection connection)
+            public async Task<AddressEmailDto> ExecuteAsync(Request request, IDbConnection connection)
             {
                 return await connection.QuerySingleProcAsync<AddressEmailDto>("[Comsense].[ProcAddressEmailGet]", new { request.AddressEmailId });
             }

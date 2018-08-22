@@ -12,52 +12,65 @@ namespace vNext.API.Features.AddressEmails
 {
     public class SaveAddressEmailCommand
     {
-
-        public class Validator: AbstractValidator<Request> {
+        public class Validator : AbstractValidator<Request>
+        {
             public Validator()
             {
                 RuleFor(request => request.AddressEmail.AddressEmailId).NotNull();
             }
         }
 
-        public class Request : AuthenticatedRequest, IRequest<Response> {
+        public class Request : AuthenticatedRequest, IRequest<Response>
+        {
             public AddressEmailDto AddressEmail { get; set; }
         }
 
         public class Response
-        {			
+        {
             public int AddressEmailId { get; set; }
         }
 
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler(IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            private readonly IProcedure<Request, short> _procedure;
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, short> procedure)
+            {
+                _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var dynamicParameters = new DynamicParameters();
-
-                    dynamicParameters.AddDynamicParams(new
-                    {
-                        request.AddressEmail.AddressEmailId,
-                        request.AddressEmail.Email
-                    });
-
-                    var parameterDirection = request.AddressEmail.AddressEmailId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
-
-                    dynamicParameters.Add("AddressEmailId",  request.AddressEmail.AddressEmailId, DbType.Int16, parameterDirection);
-                        
-                    await connection.ExecuteProcAsync("[Comsense].[ProcAddressEmailSave]", dynamicParameters);
-                    
                     return new Response()
                     {
-                        AddressEmailId = dynamicParameters.Get<short>("@AddressEmailId")
+                        AddressEmailId = await _procedure.ExecuteAsync(request, connection)
                     };
                 }
+            }
+        }
+        
+        public class Procedure : IProcedure<Request, short>
+        {
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                var dynamicParameters = new DynamicParameters();
+
+                dynamicParameters.AddDynamicParams(new
+                {
+                    request.AddressEmail.AddressEmailId,
+                    request.AddressEmail.Email
+                });
+
+                var parameterDirection = request.AddressEmail.AddressEmailId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
+
+                dynamicParameters.Add("AddressEmailId", request.AddressEmail.AddressEmailId, DbType.Int16, parameterDirection);
+
+                await connection.ExecuteProcAsync("[Comsense].[ProcAddressEmailSave]", dynamicParameters);
+
+                return dynamicParameters.Get<short>("@AddressEmailId");
             }
         }
     }

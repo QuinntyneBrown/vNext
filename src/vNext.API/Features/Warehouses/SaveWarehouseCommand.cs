@@ -2,7 +2,6 @@ using Dapper;
 using FluentValidation;
 using MediatR;
 using System.Data;
-using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using vNext.Core.Extensions;
@@ -32,8 +31,12 @@ namespace vNext.API.Features.Warehouses
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler( IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            private readonly IProcedure<Request, short> _procedure;
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, short> procedure)
+            {
+                _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
@@ -41,15 +44,15 @@ namespace vNext.API.Features.Warehouses
                 {                    
                     return new Response()
                     {
-                        WarehouseId = await Procedure.ExecuteAsync(request,connection)
+                        WarehouseId = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request,short>
         {
-            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

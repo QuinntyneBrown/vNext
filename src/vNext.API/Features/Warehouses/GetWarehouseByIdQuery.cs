@@ -1,15 +1,16 @@
 using MediatR;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
-using vNext.Core.Models;
 
 namespace vNext.API.Features.Warehouses
 {
     public class GetWarehouseByIdQuery
     {
-        public class Request : Core.Common.AuthenticatedRequest, IRequest<Response>
+        public class Request : AuthenticatedRequest, IRequest<Response>
         {
             public int WarehouseId { get; set; }
         }
@@ -22,20 +23,30 @@ namespace vNext.API.Features.Warehouses
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler(IDbConnectionManager dbConnectionManager)
-                => _dbConnectionManager = dbConnectionManager;
+            private readonly IProcedure<Request, WarehouseDto> _procedure;
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request,WarehouseDto> procedure)
+            {
+                _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
+            }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
             {
                 using (var connection = _dbConnectionManager.GetConnection(request.CustomerKey))
                 {
-                    var warehouse = await connection.QuerySingleProcAsync<Warehouse>("[Product].[ProcWarehouseGet]", new { request.WarehouseId });
-
                     return new Response()
                     {
-                        Warehouse = WarehouseDto.FromWarehouse(warehouse)
+                        Warehouse = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
+            }
+        }
+
+        public class Procedure : IProcedure<Request, WarehouseDto>
+        {
+            public async Task<WarehouseDto> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                return await connection.QuerySingleProcAsync<WarehouseDto>("[Product].[ProcWarehouseGet]", new { request.WarehouseId });
             }
         }
     }

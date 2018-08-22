@@ -25,6 +25,7 @@ using vNext.Core.Middleware;
 using vNext.Infrastructure.Data;
 using Ben.Diagnostics;
 using vNext.Core.Behaviours;
+using vNext.API.Features.Warehouses;
 
 namespace vNext.API
 {
@@ -105,6 +106,8 @@ namespace vNext.API
             services.AddSingleton<IDbConnectionManager, SqlConnectionManager>();
             services.AddSingleton<ISecurityTokenFactory, SecurityTokenFactory>();            
             services.AddMediatR(typeof(Startup).Assembly);
+            services.AddProcedures(typeof(Startup).Assembly);
+            //services.AddTransient<IProcedure<GetWarehouseByIdQuery.Request, WarehouseDto>, GetWarehouseByIdQuery.Procedure>();
             services.AddMvcCore()
                 .AddDataAnnotations()
                 .AddJsonFormatters()
