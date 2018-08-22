@@ -4,6 +4,7 @@ using MediatR;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using vNext.API.Features.Notes;
 using vNext.Core.Common;
 using vNext.Core.Extensions;
 using vNext.Core.Interfaces;
@@ -32,9 +33,10 @@ namespace vNext.API.Features.AuditLogs
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IProcedure<Request, short> _procedure;
-            public Handler(IDbConnectionManager dbConnectionManager)
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, short> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -43,16 +45,27 @@ namespace vNext.API.Features.AuditLogs
                 {
                     return new Response()
                     {
-                        AuditLogId = await Procedure.ExecuteAsync(request,connection)
+                        AuditLogId = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request, short>
         {
-            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            private readonly IProcedure<SaveNoteCommand.Request, short> _saveNoteProcedure;
+
+            public Procedure(IProcedure<SaveNoteCommand.Request, short> saveNoteProcedure)
             {
+                _saveNoteProcedure = saveNoteProcedure;
+            }
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                var noteId = await _saveNoteProcedure.ExecuteAsync(new SaveNoteCommand.Request()
+                {
+                    Note = request.AuditLog.Note
+                }, connection);
+
                 var dynamicParameters = new DynamicParameters();
 
                 var parameterDirection = request.AuditLog.AuditLogId == 0 ? ParameterDirection.Output : ParameterDirection.InputOutput;
@@ -60,8 +73,20 @@ namespace vNext.API.Features.AuditLogs
                 dynamicParameters.AddDynamicParams(new
                 {
                     request.AuditLog.AuditLogId,
-                    request.AuditLog.Code
+                    request.AuditLog.Operation,
+                    request.AuditLog.Domain,
+                    request.AuditLog.UserId,
+                    request.AuditLog.AuditDateTime,
+                    request.AuditLog.Status,
+                    request.AuditLog.Info,
+                    request.AuditLog.NoteId
                 });
+
+                if (request.AuditLog.AuditLogId == default(int))
+                    dynamicParameters.AddDynamicParams(new
+                    {
+                        UserId = request.CurrentUserId
+                    });
 
                 dynamicParameters.Add("AuditLogId", request.AuditLog.AuditLogId, DbType.Int16, parameterDirection);
 

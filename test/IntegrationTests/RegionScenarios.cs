@@ -66,7 +66,7 @@ namespace IntegrationTests.Features
                     Description = "QB Region",
                     Note = new vNext.API.Features.Notes.NoteDto()
                     {
-                        Note = ""
+                        Note = "New Region"
                     },
                     Sort = 0
                 };

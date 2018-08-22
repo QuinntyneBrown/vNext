@@ -36,14 +36,14 @@ namespace vNext.API.Features.Regions
         {
             private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IProcedure<Request, short> _procedure;
-            private readonly IMediator _mediator;
+
             public Handler(
                 IDbConnectionManager dbConnectionManager,
-                IMediator mediator
+                IProcedure<Request, short> procedure
                 )
             {
-                _mediator = mediator;                
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace vNext.API.Features.Regions
 
                     response = new Response(await SaveEntityCommandHandler.Handle(
                         request,
-                        Procedure.ExecuteAsync,
+                        _procedure.ExecuteAsync,
                         "Region",
                         request.Region.RegionId,
                         request.Region.ConcurrencyVersion,
@@ -67,11 +67,18 @@ namespace vNext.API.Features.Regions
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request,short>
         {
-            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            private readonly IProcedure<SaveNoteCommand.Request, short> _saveNoteProcedure;
+
+            public Procedure(IProcedure<SaveNoteCommand.Request,short> saveNoteProcedure)
             {
-                var noteId = await SaveNoteCommand.Prodcedure.ExecuteAsync(new SaveNoteCommand.Request() {
+                _saveNoteProcedure = saveNoteProcedure;
+            }
+
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            {
+                var noteId = await _saveNoteProcedure.ExecuteAsync(new SaveNoteCommand.Request() {
                     Note = request.Region.Note
                 }, connection);
 
@@ -102,7 +109,6 @@ namespace vNext.API.Features.Regions
                 await connection.ExecuteProcAsync("[Common].[ProcRegionSave]", dynamicParameters);
 
                 return dynamicParameters.Get<short>("@RegionId");
-
             }
         }
     }

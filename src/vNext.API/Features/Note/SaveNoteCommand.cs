@@ -34,9 +34,11 @@ namespace vNext.API.Features.Notes
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            public Handler( IDbConnectionManager dbConnectionManager)
+            private readonly IProcedure<Request, short> _procedure;
+            public Handler( IDbConnectionManager dbConnectionManager, IProcedure<Request, short> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -45,15 +47,15 @@ namespace vNext.API.Features.Notes
                 {                    
                     return new Response()
                     {
-                        NoteId = await Prodcedure.ExecuteAsync(request, connection)
+                        NoteId = await _procedure.ExecuteAsync(request, connection)
                     };
                 }
             }
         }
 
-        public static class Prodcedure
+        public class Prodcedure: IProcedure<Request,short>
         {
-            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 
@@ -66,14 +68,6 @@ namespace vNext.API.Features.Notes
                 await connection.ExecuteProcAsync("[Comsense].[ProcNoteSave]", dynamicParameters);
 
                 return dynamicParameters.Get<short>("@NoteId");
-            }
-        }
-
-        public class Procedure : IProcedure<Request, short>
-        {
-            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
-            {
-                throw new System.NotImplementedException();
             }
         }
     }

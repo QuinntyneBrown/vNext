@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using System.Threading;
+using vNext.API.Features.Notes;
 using vNext.API.Features.Regions;
-using vNext.Core.Identity;
 using vNext.Infrastructure.Data;
 
 namespace Benchmarks
@@ -13,7 +13,7 @@ namespace Benchmarks
         public RegionBenchmarks()
         {
             var configuration = ConfigurationProvider.Get();
-            _saveHandler = new SaveRegionCommand.Handler(new SqlConnectionManager(configuration), null);
+            _saveHandler = new SaveRegionCommand.Handler(new SqlConnectionManager(configuration),new SaveRegionCommand.Procedure(new SaveNoteCommand.Prodcedure()));
             _getByIdhandler = new GetRegionByIdQuery.Handler(new SqlConnectionManager(configuration));
         }
 

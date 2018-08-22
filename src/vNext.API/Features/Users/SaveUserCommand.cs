@@ -27,9 +27,10 @@ namespace vNext.API.Features.Users
             private readonly IDbConnectionManager _dbConnectionManager;
             private readonly IProcedure<Request, short> _procedure;
 
-            public Handler(IDbConnectionManager dbConnectionManager)
+            public Handler(IDbConnectionManager dbConnectionManager, IProcedure<Request, short> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -38,19 +39,24 @@ namespace vNext.API.Features.Users
                 {                    
                     return new Response()
                     {
-                        UserId = await Procedure.ExecuteAsync(request,connection)
+                        UserId = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request, short>
         {
-            public static async Task<short> ExecuteAsync(Request request, IDbConnection connection)
+            private readonly IProcedure<SaveNoteCommand.Request, short> _saveNoteProcedure;
+            public Procedure(IProcedure<SaveNoteCommand.Request, short> saveNoteProcedure)
+            {
+                _saveNoteProcedure = saveNoteProcedure;
+            }
+            public async Task<short> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 
-                var noteId = await SaveNoteCommand.Prodcedure.ExecuteAsync(new SaveNoteCommand.Request(request.User.Note.Note), connection);
+                var noteId = await _saveNoteProcedure.ExecuteAsync(new SaveNoteCommand.Request(request.User.Note.Note), connection);
                 
                 dynamicParameters.AddDynamicParams(new
                 {
