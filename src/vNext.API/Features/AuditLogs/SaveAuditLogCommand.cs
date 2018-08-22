@@ -95,6 +95,5 @@ namespace vNext.API.Features.AuditLogs
                 return dynamicParameters.Get<short>("@AuditLogId");
             }
         }    
-        
     }
 }

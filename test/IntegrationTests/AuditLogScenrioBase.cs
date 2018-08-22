@@ -4,11 +4,9 @@ namespace IntegrationTests
     {
         public static class Get
         {
-            public static string AuditLogs = "api/auditlogs";
-
-            public static string GetById(int id)
+            public static string AuditLogs(string domain, int id, int userId,string fromAuditDate,string toAuditDate)
             {
-                return $"api/auditlogs/{id}";
+                return $"api/auditlogs/{domain}/{id}/{userId}/{fromAuditDate}/{toAuditDate}";
             }
         }
 

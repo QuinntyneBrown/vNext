@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using Xunit;
 using vNext.API.Features.AuditLogs;
 using vNext.Core.Extensions;
+using System.Linq;
+using System;
 
 namespace IntegrationTests.Features
 {
@@ -21,6 +23,21 @@ namespace IntegrationTests.Features
                     });
 
                 Assert.True(response.AuditLogId == 3013);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetAuditLogs()
+        {
+            string from = DateTime.Now.AddYears(-1).ToString("yyyy-MM-dd");
+            string to = DateTime.Now.ToString("yyyy-MM-dd");
+
+            using (var server = CreateServer())
+            {
+                var response = await server.CreateClient()
+                    .GetAsync<GetAuditLogsQuery.Response>(Get.AuditLogs("Dashboard",8,2,from,to));
+
+                Assert.True(response.AuditLogs.Count() > 0);
             }
         }
     }
