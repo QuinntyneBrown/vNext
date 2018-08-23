@@ -1,10 +1,7 @@
-import { Component, Input, Renderer, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { takeUntil, tap, map } from 'rxjs/operators';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, Renderer } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBarRef, SimpleSnackBar } from '@angular/material';
-import { RedirectService } from '../core/redirect.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Subject } from 'rxjs';
 import { NotificationService } from '../core/notification.service';
 
 @Component({
@@ -16,7 +13,6 @@ export class LoginComponent {
   constructor(
     private _elementRef: ElementRef,
     private _errorService: NotificationService,
-    private _loginRedirectService: RedirectService,
     private _renderer: Renderer
   ) {}
 
@@ -70,7 +66,5 @@ export class LoginComponent {
     this._snackBarRef = this._errorService.handleError(errorResponse, 'Login Failed');
   }
 
-  ngOnDestroy() {
-    this.onDestroy.next();
-  }
+  protected ngOnDestroy() { this.onDestroy.next(); }
 }

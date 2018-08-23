@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\app\shipments\" />
+    <Folder Include="ClientApp\src\app\sales-orders\" />
     <Folder Include="ClientApp\src\app\territories\" />
     <Folder Include="ClientApp\src\app\regions\" />
   </ItemGroup>

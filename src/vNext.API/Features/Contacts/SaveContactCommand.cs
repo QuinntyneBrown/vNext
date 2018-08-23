@@ -32,10 +32,11 @@ namespace vNext.API.Features.Contacts
         public class Handler : IRequestHandler<Request, Response>
         {
             private readonly IDbConnectionManager _dbConnectionManager;
-            private readonly IProcedure<Request, short> _procedure;
-            public Handler( IDbConnectionManager dbConnectionManager)
+            private readonly IProcedure<Request, int> _procedure;
+            public Handler( IDbConnectionManager dbConnectionManager, IProcedure<Request, int> procedure)
             {
                 _dbConnectionManager = dbConnectionManager;
+                _procedure = procedure;
             }
 
             public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
@@ -44,15 +45,15 @@ namespace vNext.API.Features.Contacts
                 {
                     return new Response()
                     {
-                        ContactId = await Procedure.ExecuteAsync(request,connection)
+                        ContactId = await _procedure.ExecuteAsync(request,connection)
                     };
                 }
             }
         }
 
-        public class Procedure
+        public class Procedure: IProcedure<Request,int>
         {
-            public static async Task<int> ExecuteAsync(Request request, IDbConnection connection)
+            public async Task<int> ExecuteAsync(Request request, IDbConnection connection)
             {
                 var dynamicParameters = new DynamicParameters();
 

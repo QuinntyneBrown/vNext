@@ -22,6 +22,8 @@ import { WarehousesModule } from './warehouses/warehouses.module';
 import { RegionsModule } from './regions/regions.module';
 import { TerritoriesModule } from './territories/territories.module';
 import { DivisionsModule } from './divisions/divisions.module';
+import { ShipmentsModule } from './shipments/shipments.module';
+import { SalesOrdersModule } from './sales-orders/sales-orders.module';
 
 
 @NgModule({
@@ -45,7 +47,9 @@ import { DivisionsModule } from './divisions/divisions.module';
     DashboardTilesManagementModule,
     DivisionsModule,    
     RegionsModule,
+    SalesOrdersModule,
     SharedModule,
+    ShipmentsModule,
     TerritoriesModule,
     TilesModule,
     UsersModule,

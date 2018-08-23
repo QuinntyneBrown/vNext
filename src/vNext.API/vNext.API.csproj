@@ -11,6 +11,8 @@
     <Folder Include="Features\MostRecentlyUseds\" />
     <Folder Include="Features\Customers\" />
     <Folder Include="Features\Discounts\" />
+    <Folder Include="Features\Shipments\" />
+    <Folder Include="Features\SalesOrders\" />
     <Folder Include="Features\Statuses\" />
     <Folder Include="Features\Sizes\" />
     <Folder Include="Features\PropertyValues\" />
@@ -18,7 +20,6 @@
     <Folder Include="Features\PaymentTerms\" />
     <Folder Include="Features\Taxes\" />
     <Folder Include="Features\Territories\" />
-    <Folder Include="ProcessManagers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -38,6 +39,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\vNext.Core\vNext.Core.csproj" />
+    <ProjectReference Include="..\vNext.EventBus.ServiceBus\vNext.ServiceBus.csproj" />
     <ProjectReference Include="..\vNext.Infrastructure\vNext.Infrastructure.csproj" />
   </ItemGroup>
 

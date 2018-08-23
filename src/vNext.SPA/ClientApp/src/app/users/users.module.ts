@@ -7,6 +7,8 @@ import { UsersPageComponent } from './users-page.component';
 import { UserService } from './user.service';
 import { UserPageComponent } from './user-page.component';
 import { UserEditorComponent } from './user-editor.component';
+import { CreateUserOverlay } from './create-user-overlay';
+import { CreateUserOverlayComponent } from './create-user-overlay.component';
 
 const declarations = [
   LoginComponent,
@@ -15,8 +17,13 @@ const declarations = [
   UserEditorComponent
 ];
 
+const entryComponents = [
+  CreateUserOverlayComponent
+];
+
 const providers = [
-  UserService
+  UserService,
+  CreateUserOverlay
 ];
 
 @NgModule({
